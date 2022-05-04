@@ -30,10 +30,10 @@ function getItem (
 }
 
 const items: MenuItem[] = [
-  getItem('前言', '/', <HeartOutlined />),
+  getItem('前言', '/admin', <HeartOutlined />),
   getItem('HTML', 'HTML', <BugOutlined />, [
-    getItem('Option 1', '/articleHtml'),
-    getItem('Option 2', '/articleCss'),
+    getItem('Option 1', '/admin/articleHtml'),
+    getItem('Option 2', '/admin/articleCss'),
     getItem('Option 3', '3'),
     getItem('Option 4', '4')
   ]),
