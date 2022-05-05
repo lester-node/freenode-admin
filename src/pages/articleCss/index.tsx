@@ -1,48 +1,27 @@
-import React, { useState } from 'react'
-import hljs from 'highlight.js'
-import './github.css'
-import marked from 'marked'
-import { Row, Col, Input } from 'antd'
-import MarkdownNav from 'markdown-navbar'
-import gitContent from './git基本操作.md'
+// import react, react-markdown-editor-lite, and a markdown parser you like
+import React from 'react'
+import * as ReactDOM from 'react-dom'
+import MarkdownIt from 'markdown-it'
+import MdEditor from 'react-markdown-editor-lite'
+// import style manually
+import 'react-markdown-editor-lite/lib/index.css'
 
-function Index () {
-  hljs.configure({
-    classPrefix: 'hljs-',
-    languages: ['CSS', 'HTML', 'JavaScript', 'TypeScript', 'Markdown']
-  })
+// Register plugins if required
+// MdEditor.use(YOUR_PLUGINS_HERE);
 
-  marked.setOptions({
-    renderer: new marked.Renderer(),
-    highlight: (code) => hljs.highlightAuto(code).value,
-    gfm: true, // 默认为true。 允许 Git Hub标准的markdown.
-    breaks: true // 默认为false。 允许回车换行。该选项要求 gfm 为true。
-  })
+// Initialize a markdown parser
+const mdParser = new MarkdownIt(/* Markdown-it options */)
 
+// Finish!
+function handleEditorChange ({ html, text }) {
+  console.log('handleEditorChange', html, text)
+}
+export default (props) => {
   return (
-    <div>
-      <Row gutter={12}>
-        <Col span={18}>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: marked(gitContent || '').replace(
-                /<pre>/g,
-                "<pre class='hljs'>"
-              )
-            }}
-          />
-        </Col>
-        <Col span={6}>
-          <MarkdownNav
-            source={gitContent || ''}
-            headingTopOffset={15}
-            ordered={true}
-            updateHashAuto={false}
-          />
-        </Col>
-      </Row>
-    </div>
+    <MdEditor
+      style={{ height: '500px' }}
+      renderHTML={(text) => mdParser.render(text)}
+      onChange={handleEditorChange}
+    />
   )
 }
-
-export default Index
