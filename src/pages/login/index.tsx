@@ -1,16 +1,17 @@
 import styles from './index.less'
-import React from 'react'
+import React, { useState } from 'react'
 import api from './service'
 import useRequest from '@ahooksjs/use-request'
 import { history } from 'umi'
 import { Form, Input, Button, Checkbox, message } from 'antd'
 
 const Index = () => {
-  const onFinish = (values: any) => {
-    console.log('Success:', values)
+  const [userInfo, setUserInfo] = useState({ username: '', password: '' })
+
+  const onFinish = () => {
     loginRun({
-      username: values.username,
-      password: values.password
+      username: userInfo.username,
+      password: userInfo.password
     })
   }
 
@@ -31,55 +32,42 @@ const Index = () => {
 
   return (
     <div className={styles.login}>
-      <Form
-        name="basic"
-        labelCol={{
-          span: 8
-        }}
-        wrapperCol={{
-          span: 16
-        }}
-        initialValues={{
-          remember: true
-        }}
-        onFinish={onFinish}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="用户名"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: '请输入用户名!'
-            }
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="密码"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: '请输入密码!'
-            }
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          wrapperCol={{
-            offset: 8,
-            span: 16
-          }}
-        >
-          <Button type="primary" htmlType="submit">
+      <div className={styles.modal}>
+        <div className={styles.top}>freenode后台管理系统</div>
+        <div className={styles.middle}>
+          <input
+            type="text"
+            name="username"
+            placeholder="请输入账号/用户名"
+            className={styles.inputItem}
+            onChange={(e) => {
+              setUserInfo({
+                ...userInfo,
+                username: e.target.value
+              })
+            }}
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="请输入密码"
+            className={styles.inputItem}
+            onChange={(e) => {
+              setUserInfo({
+                ...userInfo,
+                password: e.target.value
+              })
+            }}
+          />
+          <div className={styles.btn} onClick={onFinish}>
             登录
-          </Button>
-        </Form.Item>
-      </Form>
+          </div>
+        </div>
+        <div className={styles.msg}>
+          没有账号?&nbsp;
+          <a href="#">游客登录</a>
+        </div>
+      </div>
     </div>
   )
 }
