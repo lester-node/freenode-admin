@@ -1,10 +1,29 @@
+import { message } from 'antd'
 import axios, { Method } from 'axios'
+import { history } from 'umi'
 
 interface Response<T> {
   data: T;
   message: string;
   result: number;
 }
+
+// 响应拦截器
+axios.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error.response) {
+      switch (error.response.status) {
+      case 401:
+        localStorage.removeItem('token')
+        history.push('/')
+      }
+    }
+    return Promise.reject(error.response.data)
+  }
+)
 
 function requestLogin<T> (url: string, type: Method, data?: any) {
   return new Promise<Response<T>>((resolve, reject) => {
@@ -17,7 +36,6 @@ function requestLogin<T> (url: string, type: Method, data?: any) {
         'Content-Type': 'application/json'
       }
     }
-
     axios(requestOption)
       .then((res) => {
         const { data } = res
@@ -40,6 +58,7 @@ function requestLogin<T> (url: string, type: Method, data?: any) {
 }
 
 function request<T> (url: string, type: Method, data?: any) {
+  const token = localStorage.getItem('token')
   return new Promise<Response<T>>((resolve, reject) => {
     const requestOption = {
       url,
@@ -47,8 +66,7 @@ function request<T> (url: string, type: Method, data?: any) {
       method: type,
       params: {},
       headers: {
-        // Authorization: 'Bearer' + ' ' + token,
-        // access_token: token,
+        Authorization: 'Bearer' + ' ' + token,
         'Content-Type': 'application/json'
       }
     }
@@ -57,8 +75,10 @@ function request<T> (url: string, type: Method, data?: any) {
 
     axios(requestOption)
       .then((res) => {
-        const { data } = res
-        resolve(data)
+        if (res) {
+          const { data } = res
+          resolve(data)
+        }
       })
       .catch((err) => reject(err))
   })

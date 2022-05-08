@@ -14,15 +14,30 @@ export default [
         component: '@/pages/preface',
       },
       {
-        title: '文章-HTML',
-        path: './articleHtml',
-        component: '@/pages/articleHtml',
+        title: '文章',
+        path: './article',
+        component: '@/pages/article',
       },
       {
-        title: '文章-CSS',
-        path: './articleCss',
-        component: '@/pages/articleCss',
+        title: '分类',
+        path: './classify',
+        component: '@/pages/classify',
       },
+      {
+        title: '标签',
+        path: './tag',
+        component: '@/pages/tag',
+      },
+      {
+        title: '作品',
+        path: './works',
+        component: '@/pages/works',
+      },
+      {
+        title: '留言',
+        path: './information',
+        component: '@/pages/information',
+      }
     ],
   },
 ];

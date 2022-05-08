@@ -4,7 +4,9 @@ import {
   DashboardOutlined,
   BugOutlined,
   DesktopOutlined,
-  CloudOutlined
+  CloudOutlined,
+  ScissorOutlined,
+  CompassOutlined
 } from '@ant-design/icons'
 import styles from './index.less'
 import React, { useState } from 'react'
@@ -29,47 +31,24 @@ function getItem (
   } as MenuItem
 }
 
-const items: MenuItem[] = [
-  getItem('前言', '/admin', <HeartOutlined />),
-  getItem('HTML', 'HTML', <BugOutlined />, [
-    getItem('Option 1', '/admin/articleHtml'),
-    getItem('Option 2', '/admin/articleCss'),
-    getItem('Option 3', '3'),
-    getItem('Option 4', '4')
-  ]),
-  getItem('CSS', 'CSS', <DashboardOutlined />, [
-    getItem('Option 5', '5'),
-    getItem('Option 6', '6')
-  ]),
-  getItem('JS', 'JS', <DesktopOutlined />, [
-    getItem('Option 9', '9'),
-    getItem('Option 10', '10'),
-    getItem('Option 11', '11'),
-    getItem('Option 12', '12')
-  ])
-]
-
-const menuSelect = (val: any) => {
-  history.push(val.key)
-}
-
-const rootSubmenuKeys = ['HTML', 'CSS', 'JS']
-
-const Index = (props: any) => {
+export default (props: any) => {
   const [collapsed, setCollapsed] = useState(false)
-  const [openKeys, setOpenKeys] = useState<Array<string>>([])
+
+  const items: MenuItem[] = [
+    getItem('前言', '/admin/preface', <HeartOutlined />),
+    getItem('文章', '/admin/article', <BugOutlined />),
+    getItem('分类', '/admin/classify', <DashboardOutlined />),
+    getItem('标签', '/admin/tag', <DesktopOutlined />),
+    getItem('作品', '/admin/works', <ScissorOutlined />),
+    getItem('留言', '/admin/information', <CompassOutlined />)
+  ]
+
+  const menuSelect = (val: any) => {
+    history.push(val.key)
+  }
 
   const onCollapse = (collapsed: boolean) => {
     setCollapsed(collapsed)
-  }
-
-  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
-    const latestOpenKey = keys.find((key) => openKeys.indexOf(key) === -1)
-    if (rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
-      setOpenKeys(keys)
-    } else {
-      setOpenKeys(latestOpenKey ? [latestOpenKey] : [])
-    }
   }
 
   return (
@@ -90,12 +69,10 @@ const Index = (props: any) => {
           )}
         <Menu
           mode="inline"
-          openKeys={openKeys}
           theme="light"
-          onOpenChange={onOpenChange}
           items={items}
           onSelect={menuSelect}
-          defaultSelectedKeys={['/']}
+          defaultSelectedKeys={[`${window.location.pathname}`]}
         />
       </Sider>
       <Layout>
@@ -113,5 +90,3 @@ const Index = (props: any) => {
     </Layout>
   )
 }
-
-export default Index

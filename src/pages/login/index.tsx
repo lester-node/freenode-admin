@@ -3,9 +3,9 @@ import React, { useState } from 'react'
 import api from './service'
 import useRequest from '@ahooksjs/use-request'
 import { history } from 'umi'
-import { Form, Input, Button, Checkbox, message } from 'antd'
+import { message } from 'antd'
 
-const Index = () => {
+export default () => {
   const [userInfo, setUserInfo] = useState({ username: '', password: '' })
 
   const onFinish = () => {
@@ -19,13 +19,13 @@ const Index = () => {
     manual: true,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        history.push('/admin')
+        localStorage.setItem('token', res.data.token)
+        history.push('/admin/preface')
       } else {
         message.error(res.message || '操作失败')
       }
     },
     onError: (res: any) => {
-      console.log('res', res)
       message.error(res.message || '操作失败')
     }
   })
@@ -71,5 +71,3 @@ const Index = () => {
     </div>
   )
 }
-
-export default Index
