@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
-import { Form, Row, Col, Input, Button, Select } from 'antd'
+import { Form, Row, Col, Input, Button, Select, Table } from 'antd'
+import { tableColumns } from './initData'
 import styles from './index.less'
+import { history } from 'umi'
 const { Option } = Select
 
 export default () => {
@@ -8,6 +10,20 @@ export default () => {
 
   const onFinish = (values) => {
     console.log('Received values of form: ', values)
+  }
+
+  const columns: any = [
+    ...tableColumns,
+    {
+      title: '操作',
+      dataIndex: 'action',
+      key: 'action',
+      fixed: 'right'
+    }
+  ]
+
+  const goEdit = () => {
+    history.push('/edit')
   }
 
   return (
@@ -32,10 +48,28 @@ export default () => {
               </Select>
             </Form.Item>
           </Col>
+          <Col span={8}>
+            <Form.Item name="3" label="标签">
+              <Select placeholder="请选择标签">
+                <Option value="1">1</Option>
+                <Option value="2">longlonglonglongl</Option>
+              </Select>
+            </Form.Item>
+          </Col>
         </Row>
         <Row>
           <Col
-            span={24}
+            span={12}
+            style={{
+              textAlign: 'left'
+            }}
+          >
+            <Button type="primary" onClick={goEdit}>
+              新增
+            </Button>
+          </Col>
+          <Col
+            span={12}
             style={{
               textAlign: 'right'
             }}
@@ -56,7 +90,9 @@ export default () => {
           </Col>
         </Row>
       </Form>
-      <div className={styles.articleTable}>Search Result List</div>
+      <div className={styles.articleTable}>
+        <Table columns={columns} dataSource={[]} />
+      </div>
     </div>
   )
 }

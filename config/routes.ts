@@ -37,7 +37,12 @@ export default [
         title: '留言',
         path: './information',
         component: '@/pages/information',
-      }
+      },
     ],
+  },
+  {
+    title: '编辑',
+    path: './edit',
+    component: '@/pages/edit',
   },
 ];
