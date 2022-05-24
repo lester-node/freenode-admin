@@ -4,8 +4,10 @@ import MarkdownIt from 'markdown-it'
 import Editor, { Plugins } from 'react-markdown-editor-lite'
 import 'react-markdown-editor-lite/lib/index.css'
 import { LeftOutlined } from '@ant-design/icons'
+import useRequest from '@ahooksjs/use-request'
 import { history } from 'umi'
 import { Input, Button, message } from 'antd'
+import api from './service'
 
 const mdParser = new MarkdownIt()
 Editor.use(Plugins.TabInsert, {
@@ -16,9 +18,13 @@ export default () => {
   const [title, setTitle] = useState('')
   const [content, setContent] = useState('')
 
-  function handleEditorChange ({ html, text }: any) {
+  const handleEditorChange = ({ html, text }: any) => {
     console.log('handleEditorChange', html, text)
     setContent(text)
+  }
+
+  const changeTitle = (e: any) => {
+    setTitle(e.target.value)
   }
 
   const goArticleList = () => {
@@ -26,19 +32,52 @@ export default () => {
   }
 
   const goSubmitArticle = () => {
-    if (!title) {
-      message.error('标题不能为空')
+    if (!title || !content) {
+      message.error('标题或内容不能为空')
+      return
     }
+    articleCreateRun({
+      title,
+      content
+    })
   }
 
   const goSubmitDraft = () => {
-    if (!title) {
-      message.error('标题不能为空')
+    if (!title || !content) {
+      message.error('标题或内容不能为空')
     }
   }
 
-  const changeTitle = (e: any) => {
-    setTitle(e.target.value)
+  const { run: articleCreateRun } = useRequest(
+    (obj) => api.articleCreate(obj),
+    {
+      manual: true,
+      onSuccess: (res: any) => {
+        if (res.result === 0) {
+          history.push('/admin/article')
+        } else {
+          message.error(res.message || '操作失败')
+        }
+      },
+      onError: (res: any) => {
+        message.error(res.message || '操作失败')
+      }
+    }
+  )
+
+  const imgUpload = async (file: any) => {
+    let img = ''
+    await api
+      .upload({
+        file
+      })
+      .then((res: any) => {
+        img = res.data.path
+        // 在这里返回promise为什么不行？
+      })
+    return new Promise((resolve) => {
+      resolve(img)
+    })
   }
 
   return (
@@ -71,14 +110,7 @@ export default () => {
       <Editor
         value={content}
         style={{ height: 'calc(100% - 42px)' }}
-        onImageUpload={(file) => {
-          console.log('file', file)
-          return new Promise((resolve) => {
-            resolve(
-              'localhost:3000/upload_5c07cadc18053db7ae008f5508305484.png'
-            )
-          })
-        }}
+        onImageUpload={imgUpload}
         renderHTML={(text) => mdParser.render(text)}
         onChange={handleEditorChange}
       />

@@ -1,4 +1,4 @@
-import { message } from 'antd'
+import _ from 'lodash'
 import axios, { Method } from 'axios'
 import { history } from 'umi'
 
@@ -84,6 +84,34 @@ function request<T> (url: string, type: Method, data?: any) {
   })
 }
 
+function requestFormData<T> (url: string, type: Method, data?: any) {
+  const token = localStorage.getItem('token')
+  const formData = new FormData()
+  _.each(data, (n, k) => {
+    formData.append(k, data[k])
+  })
+
+  return new Promise<Response<T>>((resolve, reject) => {
+    const requestOption = {
+      url,
+      data: formData,
+      method: type,
+      params: {},
+      headers: {
+        Authorization: 'Bearer' + ' ' + token,
+        'Content-Type': 'application/json'
+      }
+    }
+
+    axios(requestOption)
+      .then((res) => {
+        const { data } = res
+        resolve(data)
+      })
+      .catch((err) => reject(err))
+  })
+}
+
 export function postLogin<T> (url: string, data?: any) {
   return requestLogin<T>(url, 'POST', data)
 }
@@ -94,4 +122,8 @@ export function get<T> (url: string, data?: any) {
 
 export function post<T> (url: string, data?: any) {
   return request<T>(url, 'POST', data)
+}
+
+export function postFormData<T> (url: string, data?: any) {
+  return requestFormData<T>(url, 'POST', data)
 }
