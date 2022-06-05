@@ -42,7 +42,7 @@ export default [
   },
   {
     title: '编辑',
-    path: './edit',
-    component: '@/pages/edit',
+    path: './articleEdit',
+    component: '@/pages/articleEdit',
   },
 ];

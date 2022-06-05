@@ -1,4 +1,5 @@
-import { Layout, Menu, MenuProps } from 'antd'
+import { Layout, Menu, MenuProps, ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
 import {
   HeartOutlined,
   DashboardOutlined,
@@ -6,33 +7,33 @@ import {
   DesktopOutlined,
   CloudOutlined,
   ScissorOutlined,
-  CompassOutlined
-} from '@ant-design/icons'
-import styles from './index.less'
-import React, { useState } from 'react'
-import { history } from 'umi'
-const { Content, Footer, Sider } = Layout
+  CompassOutlined,
+} from '@ant-design/icons';
+import styles from './index.less';
+import React, { useState } from 'react';
+import { history } from 'umi';
+const { Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-function getItem (
+function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: 'group'
+  type?: 'group',
 ): MenuItem {
   return {
     key,
     icon,
     children,
     label,
-    type
-  } as MenuItem
+    type,
+  } as MenuItem;
 }
 
 export default (props: any) => {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(false);
 
   const items: MenuItem[] = [
     getItem('前言', '/admin/preface', <HeartOutlined />),
@@ -40,16 +41,16 @@ export default (props: any) => {
     getItem('分类', '/admin/classify', <DashboardOutlined />),
     getItem('标签', '/admin/tag', <DesktopOutlined />),
     getItem('作品', '/admin/works', <ScissorOutlined />),
-    getItem('留言', '/admin/information', <CompassOutlined />)
-  ]
+    getItem('留言', '/admin/information', <CompassOutlined />),
+  ];
 
   const menuSelect = (val: any) => {
-    history.push(val.key)
-  }
+    history.push(val.key);
+  };
 
   const onCollapse = (collapsed: boolean) => {
-    setCollapsed(collapsed)
-  }
+    setCollapsed(collapsed);
+  };
 
   return (
     <Layout className={styles.layout}>
@@ -60,13 +61,15 @@ export default (props: any) => {
         collapsed={collapsed}
         onCollapse={onCollapse}
       >
-        {collapsed
-          ? (
-            <CloudOutlined className={styles.logoSmall} />
-          )
-          : (
-            <div className={styles.logoBig}>高效率开发学习</div>
-          )}
+        {collapsed ? (
+          <CloudOutlined className={styles.logoSmall} />
+        ) : (
+          <div className={styles.logoBig}>高效率开发学习</div>
+        )}
+        {/* <div className={styles.logoBig}>
+          <CloudOutlined className={styles.logoSmall} />
+          {collapsed ? '' : '高效率开发学习'}
+        </div> */}
         <Menu
           mode="inline"
           theme="light"
@@ -76,7 +79,9 @@ export default (props: any) => {
         />
       </Sider>
       <Layout>
-        <Content className={styles.content}>{props.children}</Content>
+        <Content className={styles.content}>
+          <ConfigProvider locale={zhCN}>{props.children}</ConfigProvider>
+        </Content>
         <Footer className={styles.footer}>
           <a
             target="_blank"
@@ -88,5 +93,5 @@ export default (props: any) => {
         </Footer>
       </Layout>
     </Layout>
-  )
-}
+  );
+};
