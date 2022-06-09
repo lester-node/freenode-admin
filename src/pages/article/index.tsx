@@ -12,8 +12,10 @@ import {
   Switch,
   Modal,
   Pagination,
+  Tag,
 } from 'antd';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
+import type { TableRowSelection } from 'antd/lib/table/interface';
 import useRequest from '@ahooksjs/use-request';
 import styles from './index.less';
 import { history } from 'umi';
@@ -32,10 +34,17 @@ export default () => {
   const [tagEnum, setTagEnum] = useState([]);
   const [pageData, setPageData] = useState(config.PAGEDATA);
   const [tableParams, setTableParams] = useState(config.TABLEPARAMS);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
 
   useEffect(() => {
     articlePageRun(pageData);
-  }, [pageData.page, pageData.rows, pageData.title]);
+  }, [
+    pageData.page,
+    pageData.rows,
+    pageData.title,
+    pageData.classifyId,
+    pageData.tagId,
+  ]);
 
   useMount(() => {
     classifyEnumRun();
@@ -93,8 +102,13 @@ export default () => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          //删除有问题
-          articlePageRun(pageData);
+          let num = tableParams.total - (pageData.page - 1) * pageData.rows;
+          if (pageData.page != 1 && num == 1) {
+            setPageData({ ...pageData, page: pageData.page - 1 });
+          } else {
+            articlePageRun(pageData);
+          }
+          setSelectedRowKeys([]);
           message.success(res.message || '删除成功');
         } else {
           message.error(res.message || '操作失败');
@@ -128,25 +142,33 @@ export default () => {
     history.push('/articleEdit');
   };
 
-  const onFinish = (values: any) => {
+  const onFinish = () => {
+    let values = form.getFieldsValue(true);
     setPageData({
       ...pageData,
       ...values,
     });
   };
 
+  const rowSelection: TableRowSelection<any> = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys: React.Key[]) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+  };
+
   const editRecord = (record: any) => {
     history.push({ pathname: '/articleEdit', state: { id: record.id } });
   };
 
-  const deleteRecord = (record: any) => {
+  const deleteRecord = (ids: any) => {
     Modal.confirm({
       title: '确定删除吗?',
       icon: <ExclamationCircleOutlined />,
       content: '',
       okType: 'danger',
       onOk() {
-        articleDeleteRun({ id: record.id });
+        articleDeleteRun({ ids: ids });
       },
       onCancel() {},
     });
@@ -179,6 +201,15 @@ export default () => {
       title: '标签',
       dataIndex: 'tagName',
       width: 100,
+      render: (value: string) => {
+        return value?.split(',')?.map((item: string, index: number) => {
+          return (
+            <Tag color={config.COLOR[index]} key={index}>
+              {item}
+            </Tag>
+          );
+        });
+      },
     },
     {
       title: '是否展示',
@@ -213,7 +244,7 @@ export default () => {
         return (
           <Space>
             <a onClick={() => editRecord(record)}>编辑</a>
-            <a onClick={() => deleteRecord(record)}>删除</a>
+            <a onClick={() => deleteRecord([record.id])}>删除</a>
           </Space>
         );
       },
@@ -222,12 +253,7 @@ export default () => {
 
   return (
     <div className={styles.content} ref={ref}>
-      <Form
-        form={form}
-        name="article_search"
-        className={styles.articleForm}
-        onFinish={onFinish}
-      >
+      <Form form={form} name="article_search" className={styles.articleForm}>
         <Row gutter={24}>
           <Col span={8}>
             <Form.Item name="title" label="标题">
@@ -273,6 +299,16 @@ export default () => {
             <Button type="primary" onClick={goEdit}>
               新增文章
             </Button>
+            <Button
+              style={{
+                margin: '0 8px',
+              }}
+              danger
+              disabled={selectedRowKeys.length ? false : true}
+              onClick={() => deleteRecord(selectedRowKeys)}
+            >
+              删除
+            </Button>
           </Col>
           <Col
             span={12}
@@ -280,7 +316,7 @@ export default () => {
               textAlign: 'right',
             }}
           >
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" onClick={onFinish}>
               查询
             </Button>
             <Button
@@ -304,6 +340,7 @@ export default () => {
           dataSource={tableParams.dataList}
           scroll={tableHeight}
           pagination={false}
+          rowSelection={rowSelection}
         />
         <Pagination
           className={styles.tablePagination}

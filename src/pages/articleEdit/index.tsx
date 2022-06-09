@@ -9,6 +9,7 @@ import { history } from 'umi';
 import { Input, Button, message } from 'antd';
 import api from './service';
 import { useMount } from 'ahooks';
+import Create from './components/create';
 
 const mdParser = new MarkdownIt();
 Editor.use(Plugins.TabInsert, {
@@ -17,8 +18,11 @@ Editor.use(Plugins.TabInsert, {
 
 export default (props: any) => {
   const state = props.location.state;
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const [articleData, setArticleData] = useState<any>({});
+  const [createModal, setCreateModal] = useState({
+    info: {},
+    visible: false,
+  });
 
   useMount(() => {
     if (state?.id) {
@@ -32,8 +36,7 @@ export default (props: any) => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          setTitle(res.data.title);
-          setContent(res.data.content);
+          setArticleData(res.data);
         } else {
           message.error(res.message || '操作失败');
         }
@@ -46,11 +49,11 @@ export default (props: any) => {
 
   const handleEditorChange = ({ html, text }: any) => {
     console.log('handleEditorChange', html, text);
-    setContent(text);
+    setArticleData({ ...articleData, content: text });
   };
 
   const changeTitle = (e: any) => {
-    setTitle(e.target.value);
+    setArticleData({ ...articleData, title: e.target.value });
   };
 
   const goArticleList = () => {
@@ -58,39 +61,24 @@ export default (props: any) => {
   };
 
   const goSubmitArticle = () => {
-    if (!title || !content) {
+    if (!articleData?.title || !articleData?.content) {
       message.error('标题或内容不能为空');
       return;
     }
-    articleCreateOrUpdateRun({
-      id: state?.id,
-      title,
-      content,
+    setCreateModal({
+      info: {
+        id: state?.id,
+        ...articleData,
+      },
+      visible: true,
     });
   };
 
   const goSubmitDraft = () => {
-    if (!title || !content) {
+    if (!articleData?.title || !articleData?.content) {
       message.error('标题或内容不能为空');
     }
   };
-
-  const { run: articleCreateOrUpdateRun } = useRequest(
-    (obj) => (state?.id ? api.articleUpdate(obj) : api.articleCreate(obj)),
-    {
-      manual: true,
-      onSuccess: (res: any) => {
-        if (res.result === 0) {
-          history.push('/admin/article');
-        } else {
-          message.error(res.message || '操作失败');
-        }
-      },
-      onError: (res: any) => {
-        message.error(res.message || '操作失败');
-      },
-    },
-  );
 
   const imgUpload = async (file: any) => {
     let img = '';
@@ -121,7 +109,7 @@ export default (props: any) => {
         <Input
           className={styles.topTitle}
           placeholder="请输入标题"
-          value={title}
+          value={articleData?.title}
           onChange={changeTitle}
         />
         <Button
@@ -129,19 +117,27 @@ export default (props: any) => {
           type="primary"
           onClick={goSubmitArticle}
         >
-          {state?.id ? '保存文章' : '发布文章'}
+          发布文章
         </Button>
         <Button className={styles.topSubmit} onClick={goSubmitDraft}>
           保存草稿
         </Button>
       </div>
       <Editor
-        value={content}
+        value={articleData?.content}
         style={{ height: 'calc(100% - 42px)' }}
         onImageUpload={imgUpload}
         renderHTML={(text) => mdParser.render(text)}
         onChange={handleEditorChange}
       />
+      {createModal?.visible ? (
+        <Create
+          modal={createModal}
+          onClose={() => {
+            setCreateModal({ ...createModal, visible: false });
+          }}
+        />
+      ) : null}
     </div>
   );
 };
