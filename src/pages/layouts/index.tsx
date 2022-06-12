@@ -61,12 +61,16 @@ export default (props: any) => {
         collapsed={collapsed}
         onCollapse={onCollapse}
       >
-        {/* {collapsed ? (
-          <CloudOutlined className={styles.logoSmall} />
-        ) : (
-          <div className={styles.logoBig}>高效率开发学习</div>
-        )} */}
-        <div className={styles.logoBig}>高效率开发学习</div>
+        <div className={styles.logoBig}>
+          <CloudOutlined
+            className={collapsed ? styles.logoClass : styles.logoActiveClass}
+          />
+          <div
+            className={collapsed ? styles.textClass : styles.textActiveClass}
+          >
+            高效率开发学习
+          </div>
+        </div>
         <Menu
           mode="inline"
           theme="light"

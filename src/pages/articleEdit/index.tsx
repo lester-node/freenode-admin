@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styles from './index.less';
-import MarkdownIt from 'markdown-it';
-import Editor, { Plugins } from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import { dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { LeftOutlined } from '@ant-design/icons';
 import useRequest from '@ahooksjs/use-request';
 import { history } from 'umi';
@@ -11,18 +13,36 @@ import api from './service';
 import { useMount } from 'ahooks';
 import Create from './components/create';
 
-const mdParser = new MarkdownIt();
-Editor.use(Plugins.TabInsert, {
-  tabMapValue: 4,
-});
-
 export default (props: any) => {
+  const divRef = useRef<any>();
   const state = props.location.state;
   const [articleData, setArticleData] = useState<any>({});
   const [createModal, setCreateModal] = useState({
     info: {},
     visible: false,
   });
+
+  const components = {
+    code({ node, inline, className, children, ...props }: any) {
+      const match = /language-(\w+)/.exec(className || '');
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={dark}
+          language={match[1]}
+          PreTag="div"
+          children={String(children).replace(/\n$/, '')}
+          {...props}
+        />
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+    h2(props: any) {
+      return <h2 style={{ color: 'red' }} {...props} />;
+    },
+  };
 
   useMount(() => {
     if (state?.id) {
@@ -37,6 +57,7 @@ export default (props: any) => {
       onSuccess: (res: any) => {
         if (res.result === 0) {
           setArticleData(res.data);
+          divRef.current.innerText = res.data.content;
         } else {
           message.error(res.message || '操作失败');
         }
@@ -47,9 +68,8 @@ export default (props: any) => {
     },
   );
 
-  const handleEditorChange = ({ html, text }: any) => {
-    console.log('handleEditorChange', html, text);
-    setArticleData({ ...articleData, content: text });
+  const handleEditorChange = (e: any) => {
+    setArticleData({ ...articleData, content: e.target.innerText });
   };
 
   const changeTitle = (e: any) => {
@@ -80,20 +100,19 @@ export default (props: any) => {
     }
   };
 
-  const imgUpload = async (file: any) => {
-    let img = '';
-    await api
-      .upload({
-        file,
-      })
-      .then((res: any) => {
-        img = res.data.path;
-        // 在这里返回promise为什么不行？
-      });
-    return new Promise((resolve) => {
-      resolve(img);
-    });
-  };
+  // const imgUpload = async (file: any) => {
+  //   let img = '';
+  //   return await api
+  //     .upload({
+  //       file,
+  //     })
+  //     .then((res: any) => {
+  //       img = res.data.path;
+  //       return new Promise((resolve) => {
+  //         resolve(res.data.path);
+  //       });
+  //     });
+  // };
 
   return (
     <div className={styles.container}>
@@ -123,13 +142,22 @@ export default (props: any) => {
           保存草稿
         </Button>
       </div>
-      <Editor
-        value={articleData?.content}
-        style={{ height: 'calc(100% - 42px)' }}
-        onImageUpload={imgUpload}
-        renderHTML={(text) => mdParser.render(text)}
-        onChange={handleEditorChange}
-      />
+      <div className={styles.markdownClass}>
+        <div
+          ref={divRef}
+          className={styles.leftClass}
+          contentEditable="plaintext-only"
+          suppressContentEditableWarning
+          onInput={handleEditorChange}
+        />
+        <ReactMarkdown
+          children={articleData?.content}
+          remarkPlugins={[gfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={components}
+          className={styles.rightClass}
+        />
+      </div>
       {createModal?.visible ? (
         <Create
           modal={createModal}
