@@ -1,5 +1,13 @@
+//用react-markdown去展示，用左边div去编辑
+//问题：左边div编辑保存数据格式，右边展示高亮样式
+
 import React, { useState, useRef } from 'react';
 import styles from './index.less';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import ReactMarkdown from 'react-markdown';
+import gfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { LeftOutlined } from '@ant-design/icons';
 import useRequest from '@ahooksjs/use-request';
 import { history } from 'umi';
@@ -7,22 +15,37 @@ import { Input, Button, message } from 'antd';
 import api from './service';
 import { useMount } from 'ahooks';
 import Create from './components/create';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import '@toast-ui/editor/dist/i18n/zh-cn';
-import 'prismjs/themes/prism-okaidia.min.css';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-clojure.js';
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
 
 export default (props: any) => {
-  const editorRef = useRef<any>();
+  const divRef = useRef<any>();
   const state = props.location.state;
   const [articleData, setArticleData] = useState<any>({});
   const [createModal, setCreateModal] = useState({
     info: {},
     visible: false,
   });
+
+  const components = {
+    code({ node, inline, className, children, ...props }: any) {
+      const match = /language-(\w+)/.exec(className || '');
+      return !inline && match ? (
+        <SyntaxHighlighter
+          style={oneDark}
+          language={match[1]}
+          PreTag="div"
+          children={String(children).replace(/\n$/, '')}
+          {...props}
+        />
+      ) : (
+        <code className={className} {...props}>
+          {children}
+        </code>
+      );
+    },
+    h2(props: any) {
+      return <h2 style={{ color: 'red' }} {...props} />;
+    },
+  };
 
   useMount(() => {
     if (state?.id) {
@@ -37,7 +60,7 @@ export default (props: any) => {
       onSuccess: (res: any) => {
         if (res.result === 0) {
           setArticleData(res.data);
-          editorRef.current.getInstance().setMarkdown(res.data.content);
+          divRef.current.innerText = res.data.content;
         } else {
           message.error(res.message || '操作失败');
         }
@@ -49,10 +72,7 @@ export default (props: any) => {
   );
 
   const handleEditorChange = (e: any) => {
-    setArticleData({
-      ...articleData,
-      content: editorRef.current.getInstance().getMarkdown(),
-    });
+    setArticleData({ ...articleData, content: e.target.innerText });
   };
 
   const changeTitle = (e: any) => {
@@ -112,15 +132,19 @@ export default (props: any) => {
         </Button>
       </div>
       <div className={styles.markdownClass}>
-        <Editor
-          previewStyle="vertical"
-          height="calc(100vh - 62px)"
-          initialEditType="wysiwyg" //wysiwyg、markdown
-          language="zh-CN"
-          onChange={handleEditorChange}
-          useCommandShortcut={true} // 是否使用键盘快捷键执行命令
-          ref={editorRef}
-          plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
+        <div
+          ref={divRef}
+          className={styles.leftClass}
+          contentEditable="plaintext-only"
+          suppressContentEditableWarning
+          onInput={handleEditorChange}
+        />
+        <ReactMarkdown
+          children={articleData?.content}
+          remarkPlugins={[gfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={components}
+          className={styles.rightClass}
         />
       </div>
       {createModal?.visible ? (

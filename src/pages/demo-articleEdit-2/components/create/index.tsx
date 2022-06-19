@@ -160,7 +160,7 @@ const Index = (props: any) => {
               })}
           </Select>
         </Form.Item>
-        <Form.Item label="展示" name="show" valuePropName="checked">
+        <Form.Item label="标签" name="show" valuePropName="checked">
           <Switch checkedChildren="开启" unCheckedChildren="关闭" />
         </Form.Item>
       </Form>

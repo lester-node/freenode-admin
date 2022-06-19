@@ -253,7 +253,7 @@ export default () => {
 
   return (
     <div className={styles.content} ref={ref}>
-      <Form form={form} name="article_search" className={styles.articleForm}>
+      <Form form={form} name="article_search" className={styles.form}>
         <Row gutter={24}>
           <Col span={8}>
             <Form.Item name="title" label="标题">
@@ -333,7 +333,7 @@ export default () => {
           </Col>
         </Row>
       </Form>
-      <div className={styles.articleTable}>
+      <div className={styles.table}>
         <Table
           rowKey="id"
           columns={columns}
