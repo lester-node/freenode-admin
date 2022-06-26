@@ -8,7 +8,7 @@
     "test": "umi-test",
     "test:coverage": "umi-test --coverage",
     "lint:script": "eslint --fix --ext .js,.jsx,.ts,.tsx src",
-    "lint:style": "stylelint **/*.less --fix --custom-syntax postcss-less"
+    "lint:style": "stylelint src/**/*.less --fix --custom-syntax postcss-less"
   },
   "gitHooks": {
     "pre-commit": "lint-staged",
