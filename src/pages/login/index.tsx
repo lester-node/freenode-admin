@@ -1,34 +1,34 @@
-import styles from './index.less'
-import React, { useState } from 'react'
-import api from './service'
-import useRequest from '@ahooksjs/use-request'
-import { history } from 'umi'
-import { message } from 'antd'
+import styles from './index.less';
+import React, { useState } from 'react';
+import api from './service';
+import useRequest from '@ahooksjs/use-request';
+import { history } from 'umi';
+import { message } from 'antd';
 
 export default () => {
-  const [userInfo, setUserInfo] = useState({ username: '', password: '' })
+  const [userInfo, setUserInfo] = useState({ username: '', password: '' });
 
   const onFinish = () => {
     loginRun({
       username: userInfo.username,
-      password: userInfo.password
-    })
-  }
+      password: userInfo.password,
+    });
+  };
 
   const { run: loginRun } = useRequest((obj) => api.login(obj), {
     manual: true,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        localStorage.setItem('token', res.data.token)
-        history.push('/admin/preface')
+        localStorage.setItem('token', res.data.token);
+        history.push('/admin/preface');
       } else {
-        message.error(res.message || '操作失败')
+        message.error(res.message || '操作失败');
       }
     },
     onError: (res: any) => {
-      message.error(res.message || '操作失败')
-    }
-  })
+      message.error(res.message || '操作失败');
+    },
+  });
 
   return (
     <div className={styles.login}>
@@ -43,8 +43,8 @@ export default () => {
             onChange={(e) => {
               setUserInfo({
                 ...userInfo,
-                username: e.target.value
-              })
+                username: e.target.value,
+              });
             }}
           />
           <input
@@ -55,8 +55,8 @@ export default () => {
             onChange={(e) => {
               setUserInfo({
                 ...userInfo,
-                password: e.target.value
-              })
+                password: e.target.value,
+              });
             }}
           />
           <div className={styles.btn} onClick={onFinish}>
@@ -69,5 +69,5 @@ export default () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

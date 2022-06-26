@@ -27,7 +27,9 @@ import moment from 'moment';
 export default () => {
   const ref: any = useRef();
   const size: any = useSize(ref);
-  let tableHeight = { y: size ? size.height - 240 : window.innerHeight - 310 };
+  const tableHeight = {
+    y: size ? size.height - 240 : window.innerHeight - 310,
+  };
 
   const [form] = Form.useForm();
   const [classifyEnum, setClassifyEnum] = useState([]);
@@ -102,8 +104,8 @@ export default () => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          let num = tableParams.total - (pageData.page - 1) * pageData.rows;
-          if (pageData.page != 1 && num == 1) {
+          const num = tableParams.total - (pageData.page - 1) * pageData.rows;
+          if (pageData.page !== 1 && num === 1) {
             setPageData({ ...pageData, page: pageData.page - 1 });
           } else {
             articlePageRun(pageData);
@@ -143,7 +145,7 @@ export default () => {
   };
 
   const onFinish = () => {
-    let values = form.getFieldsValue(true);
+    const values = form.getFieldsValue(true);
     setPageData({
       ...pageData,
       ...values,
@@ -304,7 +306,7 @@ export default () => {
                 margin: '0 8px',
               }}
               danger
-              disabled={selectedRowKeys.length ? false : true}
+              disabled={!selectedRowKeys.length}
               onClick={() => deleteRecord(selectedRowKeys)}
             >
               删除

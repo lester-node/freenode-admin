@@ -1,4 +1,3 @@
-
 const config = {
   PAGEDATA: {
     page: 1,

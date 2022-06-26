@@ -1,4 +1,4 @@
-import { post,get } from '@/utils/request'
+import { post, get } from '@/utils/request';
 
 const api = {
   articlePage: (data: any) => get('/v1/article/articlePage', data),
@@ -8,4 +8,4 @@ const api = {
   tagEnum: (data: any) => post('/v1/tag/tagEnum', data),
 };
 
-export default api
+export default api;

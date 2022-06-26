@@ -25,7 +25,9 @@ import Create from './components/create';
 export default () => {
   const ref: any = useRef();
   const size: any = useSize(ref);
-  let tableHeight = { y: size ? size.height - 240 : window.innerHeight - 310 };
+  const tableHeight = {
+    y: size ? size.height - 240 : window.innerHeight - 310,
+  };
 
   const [form] = Form.useForm();
   const [pageData, setPageData] = useState(config.PAGEDATA);
@@ -58,29 +60,26 @@ export default () => {
     },
   });
 
-  const { run: articleDeleteRun } = useRequest(
-    (obj) => api.tagDelete(obj),
-    {
-      manual: true,
-      onSuccess: (res: any) => {
-        if (res.result === 0) {
-          let num = tableParams.total - (pageData.page - 1) * pageData.rows;
-          if (pageData.page != 1 && num == 1) {
-            setPageData({ ...pageData, page: pageData.page - 1 });
-          } else {
-            tagPageRun(pageData);
-          }
-          setSelectedRowKeys([]);
-          message.success(res.message || '删除成功');
+  const { run: articleDeleteRun } = useRequest((obj) => api.tagDelete(obj), {
+    manual: true,
+    onSuccess: (res: any) => {
+      if (res.result === 0) {
+        const num = tableParams.total - (pageData.page - 1) * pageData.rows;
+        if (pageData.page !== 1 && num === 1) {
+          setPageData({ ...pageData, page: pageData.page - 1 });
         } else {
-          message.error(res.message || '操作失败');
+          tagPageRun(pageData);
         }
-      },
-      onError: (res: any) => {
+        setSelectedRowKeys([]);
+        message.success(res.message || '删除成功');
+      } else {
         message.error(res.message || '操作失败');
-      },
+      }
     },
-  );
+    onError: (res: any) => {
+      message.error(res.message || '操作失败');
+    },
+  });
 
   const { run: articleChangeShowRun } = useRequest(
     (obj) => api.tagChangeShow(obj),
@@ -111,8 +110,8 @@ export default () => {
   };
 
   const onFinish = () => {
-    let values = form.getFieldsValue(true);
-    console.log('value',values);
+    const values = form.getFieldsValue(true);
+    console.log('value', values);
     setPageData({
       ...pageData,
       ...values,
@@ -227,7 +226,7 @@ export default () => {
                 margin: '0 8px',
               }}
               danger
-              disabled={selectedRowKeys.length ? false : true}
+              disabled={!selectedRowKeys.length}
               onClick={() => deleteRecord(selectedRowKeys)}
             >
               删除

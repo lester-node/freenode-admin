@@ -18,14 +18,16 @@ import useRequest from '@ahooksjs/use-request';
 import styles from './index.less';
 import api from './service';
 import config from './config';
-import { useMount, useSize } from 'ahooks';
+import { useSize } from 'ahooks';
 import moment from 'moment';
 import Create from './components/create';
 
 export default () => {
   const ref: any = useRef();
   const size: any = useSize(ref);
-  let tableHeight = { y: size ? size.height - 240 : window.innerHeight - 310 };
+  const tableHeight = {
+    y: size ? size.height - 240 : window.innerHeight - 310,
+  };
 
   const [form] = Form.useForm();
   const [pageData, setPageData] = useState(config.PAGEDATA);
@@ -64,8 +66,8 @@ export default () => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          let num = tableParams.total - (pageData.page - 1) * pageData.rows;
-          if (pageData.page != 1 && num == 1) {
+          const num = tableParams.total - (pageData.page - 1) * pageData.rows;
+          if (pageData.page !== 1 && num === 1) {
             setPageData({ ...pageData, page: pageData.page - 1 });
           } else {
             classifyPageRun(pageData);
@@ -111,8 +113,8 @@ export default () => {
   };
 
   const onFinish = () => {
-    let values = form.getFieldsValue(true);
-    console.log('value',values);
+    const values = form.getFieldsValue(true);
+    console.log('value', values);
     setPageData({
       ...pageData,
       ...values,
@@ -227,7 +229,7 @@ export default () => {
                 margin: '0 8px',
               }}
               danger
-              disabled={selectedRowKeys.length ? false : true}
+              disabled={!selectedRowKeys.length}
               onClick={() => deleteRecord(selectedRowKeys)}
             >
               删除

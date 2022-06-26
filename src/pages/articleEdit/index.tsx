@@ -115,7 +115,7 @@ export default (props: any) => {
         <Editor
           previewStyle="vertical"
           height="calc(100vh - 62px)"
-          initialEditType="wysiwyg" //wysiwyg、markdown
+          initialEditType="wysiwyg" // wysiwyg、markdown
           language="zh-CN"
           onChange={handleEditorChange}
           useCommandShortcut={true} // 是否使用键盘快捷键执行命令

@@ -1,18 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useMount } from 'ahooks';
 import useRequest from '@ahooksjs/use-request';
-import {
-  Spin,
-  Modal,
-  Row,
-  Col,
-  Button,
-  Form,
-  Input,
-  Select,
-  message,
-  Switch,
-} from 'antd';
+import { Modal, Button, Form, Select, message, Switch } from 'antd';
 import { history } from 'umi';
 import api from '../../service';
 
@@ -30,12 +19,10 @@ const Index = (props: any) => {
       form.setFieldsValue({
         show: info.show,
         classifyId: { value: info?.classifyId, label: info?.classifyName },
-        tagId: info?.tagId
-          ?.split(',')
-          ?.map((item: string, index: number) => ({
-            value: item,
-            label: info.tagName.split(',')[index],
-          })),
+        tagId: info?.tagId?.split(',')?.map((item: string, index: number) => ({
+          value: item,
+          label: info.tagName.split(',')[index],
+        })),
       });
     } else {
       form.setFieldsValue({ show: true });
@@ -48,6 +35,7 @@ const Index = (props: any) => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
+          message.success(res.message || '操作成功');
           history.push('/admin/article');
         } else {
           message.error(res.message || '操作失败');
@@ -60,8 +48,8 @@ const Index = (props: any) => {
   );
 
   const onFinish = () => {
-    let formData = form.getFieldsValue(true);
-    let sendData = {
+    const formData = form.getFieldsValue(true);
+    const sendData = {
       classifyId: formData?.classifyId?.value,
       classifyName: formData?.classifyId?.label,
       tagId: formData?.tagId?.map((item: any) => item.value).join(','),

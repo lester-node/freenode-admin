@@ -1,4 +1,4 @@
-import { post, postFormData } from '@/utils/request'
+import { post, postFormData } from '@/utils/request';
 
 const api = {
   articleCreate: (data: any) => post('/v1/article/articleCreate', data),
@@ -8,4 +8,4 @@ const api = {
   tagEnum: (data: any) => post('/v1/tag/tagEnum', data),
 };
 
-export default api
+export default api;

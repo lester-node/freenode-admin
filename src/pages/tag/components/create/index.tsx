@@ -1,18 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useMount } from 'ahooks';
 import useRequest from '@ahooksjs/use-request';
-import {
-  Spin,
-  Modal,
-  Row,
-  Col,
-  Button,
-  Form,
-  Input,
-  Select,
-  message,
-  Switch,
-} from 'antd';
+import { Modal, Button, Form, Input, message, Switch } from 'antd';
 import api from '../../service';
 
 const Index = (props: any) => {
@@ -37,7 +26,7 @@ const Index = (props: any) => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          message.success('新增成功');
+          message.success(res.message || '操作成功');
           onReset();
           onClose();
         } else {
@@ -53,8 +42,8 @@ const Index = (props: any) => {
   const onFinish = async () => {
     try {
       await form.validateFields();
-      let formData = form.getFieldsValue(true);
-      let sendData = {
+      const formData = form.getFieldsValue(true);
+      const sendData = {
         show: formData?.show,
         id: info?.id,
         name: formData?.name,
