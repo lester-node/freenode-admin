@@ -16,7 +16,7 @@
   },
   "lint-staged": {
     "*.less": [
-      "stylelint **/*.less --fix --custom-syntax postcss-less"
+      "stylelint src/**/*.less --fix --custom-syntax postcss-less"
     ],
     "src/**/*.{js,jsx,ts,tsx}": [
       "prettier -c --write .",
