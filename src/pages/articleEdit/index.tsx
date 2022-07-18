@@ -1,34 +1,34 @@
-import React, { useState, useRef } from 'react';
-import styles from './index.less';
-import { LeftOutlined } from '@ant-design/icons';
-import useRequest from '@ahooksjs/use-request';
-import { history } from 'umi';
-import { Input, Button, message } from 'antd';
-import api from './service';
-import { useMount } from 'ahooks';
-import Create from './components/create';
-import { Editor } from '@toast-ui/react-editor';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import '@toast-ui/editor/dist/i18n/zh-cn';
-import 'prismjs/themes/prism-okaidia.min.css';
-import Prism from 'prismjs';
-import 'prismjs/components/prism-clojure.js';
-import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight';
+import React, { useState, useRef } from 'react'
+import styles from './index.less'
+import { LeftOutlined } from '@ant-design/icons'
+import useRequest from '@ahooksjs/use-request'
+import { history } from 'umi'
+import { Input, Button, message } from 'antd'
+import api from './service'
+import { useMount } from 'ahooks'
+import Create from './components/create'
+import { Editor } from '@toast-ui/react-editor'
+import '@toast-ui/editor/dist/toastui-editor.css'
+import '@toast-ui/editor/dist/i18n/zh-cn'
+import Prism from 'prismjs'
+import 'prismjs/themes/prism-okaidia.min.css'
+import 'prismjs/components/prism-clojure.js'
+import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight'
 
 export default (props: any) => {
-  const editorRef = useRef<any>();
-  const state = props.location.state;
-  const [articleData, setArticleData] = useState<any>({});
+  const editorRef = useRef<any>()
+  const state = props.location.state
+  const [articleData, setArticleData] = useState<any>({})
   const [createModal, setCreateModal] = useState({
     info: {},
-    visible: false,
-  });
+    visible: false
+  })
 
   useMount(() => {
     if (state?.id) {
-      articleSelectOneRun({ id: state?.id });
+      articleSelectOneRun({ id: state?.id })
     }
-  });
+  })
 
   const { run: articleSelectOneRun } = useRequest(
     (obj) => api.articleSelectOne(obj),
@@ -36,52 +36,52 @@ export default (props: any) => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          setArticleData(res.data);
-          editorRef.current.getInstance().setMarkdown(res.data.content);
+          setArticleData(res.data)
+          editorRef.current.getInstance().setMarkdown(res.data.content)
         } else {
-          message.error(res.message || '操作失败');
+          message.error(res.message || '操作失败')
         }
       },
       onError: (res: any) => {
-        message.error(res.message || '操作失败');
-      },
-    },
-  );
+        message.error(res.message || '操作失败')
+      }
+    }
+  )
 
   const handleEditorChange = (e: any) => {
     setArticleData({
       ...articleData,
-      content: editorRef.current.getInstance().getMarkdown(),
-    });
-  };
+      content: editorRef.current.getInstance().getMarkdown()
+    })
+  }
 
   const changeTitle = (e: any) => {
-    setArticleData({ ...articleData, title: e.target.value });
-  };
+    setArticleData({ ...articleData, title: e.target.value })
+  }
 
   const goArticleList = () => {
-    history.push('/admin/article');
-  };
+    history.push('/admin/article')
+  }
 
   const goSubmitArticle = () => {
     if (!articleData?.title || !articleData?.content) {
-      message.error('标题或内容不能为空');
-      return;
+      message.error('标题或内容不能为空')
+      return
     }
     setCreateModal({
       info: {
         id: state?.id,
-        ...articleData,
+        ...articleData
       },
-      visible: true,
-    });
-  };
+      visible: true
+    })
+  }
 
   const goSubmitDraft = () => {
     if (!articleData?.title || !articleData?.content) {
-      message.error('标题或内容不能为空');
+      message.error('标题或内容不能为空')
     }
-  };
+  }
 
   return (
     <div className={styles.container}>
@@ -123,14 +123,16 @@ export default (props: any) => {
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
         />
       </div>
-      {createModal?.visible ? (
-        <Create
-          modal={createModal}
-          onClose={() => {
-            setCreateModal({ ...createModal, visible: false });
-          }}
-        />
-      ) : null}
+      {createModal?.visible
+        ? (
+          <Create
+            modal={createModal}
+            onClose={() => {
+              setCreateModal({ ...createModal, visible: false })
+            }}
+          />
+        )
+        : null}
     </div>
-  );
-};
+  )
+}

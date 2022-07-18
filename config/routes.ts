@@ -5,6 +5,7 @@ export default [
     component: '@/pages/login',
   },
   {
+    title: '后台管理',
     path: '/admin',
     component: '@/pages/layouts',
     routes: [
