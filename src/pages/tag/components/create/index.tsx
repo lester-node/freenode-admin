@@ -1,24 +1,24 @@
-import React, { useRef, useState } from 'react';
-import { useMount } from 'ahooks';
-import useRequest from '@ahooksjs/use-request';
-import { Modal, Button, Form, Input, message, Switch } from 'antd';
-import api from '../../service';
+import React, { useRef, useState } from 'react'
+import { useMount } from 'ahooks'
+import useRequest from '@ahooksjs/use-request'
+import { Modal, Button, Form, Input, message, Switch } from 'antd'
+import api from '../../service'
 
 const Index = (props: any) => {
-  const { modal, onClose } = props;
-  const { info, visible, onReset } = modal;
-  const [form] = Form.useForm();
+  const { modal, onClose } = props
+  const { info, visible, onReset } = modal
+  const [form] = Form.useForm()
 
   useMount(() => {
     if (info?.id) {
       form.setFieldsValue({
         name: info.name,
-        show: info.show,
-      });
+        show: info.show
+      })
     } else {
-      form.setFieldsValue({ show: true });
+      form.setFieldsValue({ show: true })
     }
-  });
+  })
 
   const { run: tagCreateOrUpdateRun } = useRequest(
     (obj) => (obj?.id ? api.tagUpdate(obj) : api.tagCreate(obj)),
@@ -26,34 +26,34 @@ const Index = (props: any) => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          message.success(res.message || '操作成功');
-          onReset();
-          onClose();
+          message.success(res.message || '操作成功')
+          onReset()
+          onClose()
         } else {
-          message.error(res.message || '操作失败');
+          message.error(res.message || '操作失败')
         }
       },
       onError: (res: any) => {
-        message.error(res.message || '操作失败');
-      },
-    },
-  );
+        message.error(res.message || '操作失败')
+      }
+    }
+  )
 
   const onFinish = async () => {
     try {
-      await form.validateFields();
-      const formData = form.getFieldsValue(true);
+      await form.validateFields()
+      const formData = form.getFieldsValue(true)
       const sendData = {
         show: formData?.show,
         id: info?.id,
-        name: formData?.name,
-      };
-      console.log('新增参数', sendData);
-      tagCreateOrUpdateRun(sendData);
+        name: formData?.name
+      }
+      console.log('新增参数', sendData)
+      tagCreateOrUpdateRun(sendData)
     } catch (errorInfo) {
-      console.log('Failed:', errorInfo);
+      console.log('Failed:', errorInfo)
     }
-  };
+  }
 
   const modalProps = {
     title: '新增',
@@ -67,9 +67,9 @@ const Index = (props: any) => {
       </Button>,
       <Button key="publish" onClick={onFinish} type="primary">
         新增
-      </Button>,
-    ],
-  };
+      </Button>
+    ]
+  }
 
   return (
     <Modal {...modalProps}>
@@ -91,7 +91,7 @@ const Index = (props: any) => {
         </Form.Item>
       </Form>
     </Modal>
-  );
-};
+  )
+}
 
-export default Index;
+export default Index

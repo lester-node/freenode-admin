@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Form,
   Row,
@@ -10,38 +10,38 @@ import {
   Space,
   Switch,
   Modal,
-  Pagination,
-} from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
-import type { TableRowSelection } from 'antd/lib/table/interface';
-import useRequest from '@ahooksjs/use-request';
-import styles from './index.less';
-import api from './service';
-import config from './config';
-import { useSize } from 'ahooks';
-import moment from 'moment';
-import Create from './components/create';
+  Pagination
+} from 'antd'
+import { ExclamationCircleOutlined } from '@ant-design/icons'
+import type { TableRowSelection } from 'antd/lib/table/interface'
+import useRequest from '@ahooksjs/use-request'
+import styles from './index.less'
+import api from './service'
+import config from './config'
+import { useSize } from 'ahooks'
+import moment from 'moment'
+import Create from './components/create'
 
 export default () => {
-  const ref: any = useRef();
-  const size: any = useSize(ref);
+  const ref: any = useRef()
+  const size: any = useSize(ref)
   const tableHeight = {
-    y: size ? size.height - 240 : window.innerHeight - 310,
-  };
+    y: size ? size.height - 240 : window.innerHeight - 310
+  }
 
-  const [form] = Form.useForm();
-  const [pageData, setPageData] = useState(config.PAGEDATA);
-  const [tableParams, setTableParams] = useState(config.TABLEPARAMS);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
+  const [form] = Form.useForm()
+  const [pageData, setPageData] = useState(config.PAGEDATA)
+  const [tableParams, setTableParams] = useState(config.TABLEPARAMS)
+  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([])
   const [createModal, setCreateModal] = useState({
     info: {},
     visible: false,
-    onReset: () => {},
-  });
+    onReset: () => {}
+  })
 
   useEffect(() => {
-    classifyPageRun(pageData);
-  }, [pageData.page, pageData.rows, pageData.name]);
+    classifyPageRun(pageData)
+  }, [pageData.page, pageData.rows, pageData.name])
 
   const { run: classifyPageRun } = useRequest((obj) => api.classifyPage(obj), {
     manual: true,
@@ -49,16 +49,16 @@ export default () => {
       if (res.result === 0) {
         setTableParams({
           dataList: res.data.rows,
-          total: res.data.total,
-        });
+          total: res.data.total
+        })
       } else {
-        message.error(res.message || '操作失败');
+        message.error(res.message || '操作失败')
       }
     },
     onError: (res: any) => {
-      message.error(res.message || '操作失败');
-    },
-  });
+      message.error(res.message || '操作失败')
+    }
+  })
 
   const { run: articleDeleteRun } = useRequest(
     (obj) => api.classifyDelete(obj),
@@ -66,23 +66,23 @@ export default () => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          const num = tableParams.total - (pageData.page - 1) * pageData.rows;
+          const num = tableParams.total - (pageData.page - 1) * pageData.rows
           if (pageData.page !== 1 && num === 1) {
-            setPageData({ ...pageData, page: pageData.page - 1 });
+            setPageData({ ...pageData, page: pageData.page - 1 })
           } else {
-            classifyPageRun(pageData);
+            classifyPageRun(pageData)
           }
-          setSelectedRowKeys([]);
-          message.success(res.message || '删除成功');
+          setSelectedRowKeys([])
+          message.success(res.message || '删除成功')
         } else {
-          message.error(res.message || '操作失败');
+          message.error(res.message || '操作失败')
         }
       },
       onError: (res: any) => {
-        message.error(res.message || '操作失败');
-      },
-    },
-  );
+        message.error(res.message || '操作失败')
+      }
+    }
+  )
 
   const { run: articleChangeShowRun } = useRequest(
     (obj) => api.classifyChangeShow(obj),
@@ -90,43 +90,43 @@ export default () => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          classifyPageRun(pageData);
-          message.success(res.message || '修改展示成功');
+          classifyPageRun(pageData)
+          message.success(res.message || '修改展示成功')
         } else {
-          message.error(res.message || '操作失败');
+          message.error(res.message || '操作失败')
         }
       },
       onError: (res: any) => {
-        message.error(res.message || '操作失败');
-      },
-    },
-  );
+        message.error(res.message || '操作失败')
+      }
+    }
+  )
 
   const goCreate = (record?: any) => {
     setCreateModal({
       info: record.id ? record : {},
       visible: true,
       onReset: () => {
-        classifyPageRun(pageData);
-      },
-    });
-  };
+        classifyPageRun(pageData)
+      }
+    })
+  }
 
   const onFinish = () => {
-    const values = form.getFieldsValue(true);
-    console.log('value', values);
+    const values = form.getFieldsValue(true)
+    console.log('value', values)
     setPageData({
       ...pageData,
-      ...values,
-    });
-  };
+      ...values
+    })
+  }
 
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(newSelectedRowKeys);
-    },
-  };
+      setSelectedRowKeys(newSelectedRowKeys)
+    }
+  }
 
   const deleteRecord = (ids: any) => {
     Modal.confirm({
@@ -134,16 +134,16 @@ export default () => {
       icon: <ExclamationCircleOutlined />,
       content: '',
       okType: 'danger',
-      onOk() {
-        articleDeleteRun({ ids: ids });
+      onOk () {
+        articleDeleteRun({ ids: ids })
       },
-      onCancel() {},
-    });
-  };
+      onCancel () {}
+    })
+  }
 
   const switchChange = (value: any, record: any) => {
-    articleChangeShowRun({ show: value, id: record.id });
-  };
+    articleChangeShowRun({ show: value, id: record.id })
+  }
 
   const columns: any = [
     {
@@ -151,13 +151,13 @@ export default () => {
       dataIndex: 'staffName',
       width: 100,
       render: (value: any, record: any, index: number) => {
-        return (pageData.page - 1) * pageData.rows + index + 1;
-      },
+        return (pageData.page - 1) * pageData.rows + index + 1
+      }
     },
     {
       title: '分类名称',
       dataIndex: 'name',
-      width: 100,
+      width: 100
     },
     {
       title: '是否展示',
@@ -171,13 +171,13 @@ export default () => {
             unCheckedChildren="关闭"
             onChange={(value) => switchChange(value, record)}
           />
-        );
-      },
+        )
+      }
     },
     {
       title: '文章数',
       dataIndex: 'articleTotal',
-      width: 100,
+      width: 100
     },
     {
       title: '最后更新时间',
@@ -185,8 +185,8 @@ export default () => {
       key: 'updatedAt',
       width: 120,
       render: (value: any) => {
-        return moment(value).format('YYYY-MM-DD HH:mm:ss');
-      },
+        return moment(value).format('YYYY-MM-DD HH:mm:ss')
+      }
     },
     {
       title: '操作',
@@ -199,10 +199,10 @@ export default () => {
             <a onClick={() => goCreate(record)}>编辑</a>
             <a onClick={() => deleteRecord([record.id])}>删除</a>
           </Space>
-        );
-      },
-    },
-  ];
+        )
+      }
+    }
+  ]
 
   return (
     <div className={styles.content} ref={ref}>
@@ -218,7 +218,7 @@ export default () => {
           <Col
             span={12}
             style={{
-              textAlign: 'left',
+              textAlign: 'left'
             }}
           >
             <Button type="primary" onClick={goCreate}>
@@ -226,7 +226,7 @@ export default () => {
             </Button>
             <Button
               style={{
-                margin: '0 8px',
+                margin: '0 8px'
               }}
               danger
               disabled={!selectedRowKeys.length}
@@ -238,7 +238,7 @@ export default () => {
           <Col
             span={12}
             style={{
-              textAlign: 'right',
+              textAlign: 'right'
             }}
           >
             <Button type="primary" onClick={onFinish}>
@@ -246,11 +246,11 @@ export default () => {
             </Button>
             <Button
               style={{
-                margin: '0 8px',
+                margin: '0 8px'
               }}
               onClick={() => {
-                setPageData(config.PAGEDATA);
-                form.resetFields();
+                setPageData(config.PAGEDATA)
+                form.resetFields()
               }}
             >
               重置
@@ -278,19 +278,21 @@ export default () => {
             setPageData({
               ...pageData,
               page: page,
-              rows: pageSize,
-            });
+              rows: pageSize
+            })
           }}
         />
       </div>
-      {createModal?.visible ? (
-        <Create
-          modal={createModal}
-          onClose={() => {
-            setCreateModal({ ...createModal, visible: false });
-          }}
-        />
-      ) : null}
+      {createModal?.visible
+        ? (
+          <Create
+            modal={createModal}
+            onClose={() => {
+              setCreateModal({ ...createModal, visible: false })
+            }}
+          />
+        )
+        : null}
     </div>
-  );
-};
+  )
+}
