@@ -53,7 +53,7 @@ export default () => {
     tagEnumRun()
   })
 
-  const { run: classifyEnumRun } = useRequest(() => api.classifyEnum({}), {
+  const { run: classifyEnumRun } = useRequest(() => api.classifyList({}), {
     manual: true,
     onSuccess: (res: any) => {
       if (res.result === 0) {
