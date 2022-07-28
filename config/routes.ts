@@ -15,6 +15,16 @@ export default [
         component: '@/pages/preface',
       },
       {
+        title: '教程',
+        path: './course',
+        component: '@/pages/course',
+      },
+      {
+        title: '教程文章',
+        path: './courseArticle',
+        component: '@/pages/courseArticle',
+      },
+      {
         title: '文章',
         path: './article',
         component: '@/pages/article',
@@ -42,8 +52,13 @@ export default [
     ],
   },
   {
-    title: '编辑',
+    title: '文章编辑',
     path: './articleEdit',
     component: '@/pages/articleEdit',
+  },
+  {
+    title: '教程文章编辑',
+    path: './courseArticleEdit',
+    component: '@/pages/courseArticleEdit',
   },
 ];

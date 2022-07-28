@@ -1,0 +1,33 @@
+.content {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: #f0f2f5;
+  flex-direction: column;
+
+  .form {
+    height: 110px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+  }
+
+  .table {
+    padding: 10px;
+    flex: 1;
+    background-color: #fff;
+
+    .tablePagination {
+      position: absolute;
+      right: 20px;
+      bottom: 70px;
+    }
+  }
+
+  :global {
+    .ant-row {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
+  }
+}

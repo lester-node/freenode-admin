@@ -7,10 +7,12 @@ import {
   DesktopOutlined,
   CloudOutlined,
   ScissorOutlined,
-  CompassOutlined
-} from '@ant-design/icons'
+  CompassOutlined,
+  HighlightOutlined,
+  KeyOutlined,
+} from '@ant-design/icons';
 import styles from './index.less'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { history } from 'umi'
 const { Content, Footer, Sider } = Layout
 
@@ -34,15 +36,22 @@ function getItem (
 
 export default (props: any) => {
   const [collapsed, setCollapsed] = useState(false)
+  const [selectMenu, setSelectMenu] = useState<any>([]);
+
+  useEffect(() => {
+    setSelectMenu([window.location.pathname])
+  },[window.location.pathname])
 
   const items: MenuItem[] = [
     getItem('前言', '/admin/preface', <HeartOutlined />),
+    getItem('教程', '/admin/course', <HighlightOutlined />),
+    getItem('教程文章', '/admin/courseArticle', <KeyOutlined />),
     getItem('文章', '/admin/article', <BugOutlined />),
     getItem('分类', '/admin/classify', <DashboardOutlined />),
     getItem('标签', '/admin/tag', <DesktopOutlined />),
     getItem('作品', '/admin/works', <ScissorOutlined />),
-    getItem('留言', '/admin/information', <CompassOutlined />)
-  ]
+    getItem('留言', '/admin/information', <CompassOutlined />),
+  ];
 
   const menuSelect = (val: any) => {
     history.push(val.key)
@@ -76,6 +85,7 @@ export default (props: any) => {
           theme="light"
           items={items}
           onSelect={menuSelect}
+          selectedKeys={selectMenu}
           defaultSelectedKeys={[`${window.location.pathname}`]}
         />
       </Sider>
@@ -94,5 +104,5 @@ export default (props: any) => {
         </Footer>
       </Layout>
     </Layout>
-  )
+  );
 }
