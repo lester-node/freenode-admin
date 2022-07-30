@@ -13,8 +13,6 @@ const Index = (props: any) => {
   const [tagEnum, setTagEnum] = useState([])
 
   useMount(() => {
-    classifyEnumRun()
-    tagEnumRun()
     if (info?.id) {
       form.setFieldsValue({
         show: info.show,
@@ -51,11 +49,12 @@ const Index = (props: any) => {
 
   const onFinish = () => {
     const formData = form.getFieldsValue(true)
+    console.log('formdata',formData);
     const sendData = {
       classifyId: formData?.classifyId?.value,
       classifyName: formData?.classifyId?.label,
-      tagId: formData?.tagId?.map((item: any) => item.value).join(','),
-      tagName: formData?.tagId?.map((item: any) => item.label).join(','),
+      tagId: formData?.tagId?.length ? formData?.tagId?.map((item: any) => item.value).join(',') : undefined,
+      tagName: formData?.tagId?.length ? formData?.tagId?.map((item: any) => item.label).join(',') : undefined,
       show: formData?.show,
       id: info?.id,
       content: info?.content,
@@ -81,22 +80,22 @@ const Index = (props: any) => {
     ]
   }
 
-  const { run: classifyEnumRun } = useRequest(() => api.classifyEnum({}), {
-    manual: true,
+  const { run: classifyListRun } = useRequest(() => api.classifyList({}), {
+    manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        setClassifyEnum(res.data)
+        setClassifyEnum(res.data);
       } else {
-        message.error(res.message || '操作失败')
+        message.error(res.message || '操作失败');
       }
     },
     onError: (res: any) => {
-      message.error(res.message || '操作失败')
-    }
-  })
+      message.error(res.message || '操作失败');
+    },
+  });
 
   const { run: tagEnumRun } = useRequest(() => api.tagEnum({}), {
-    manual: true,
+    manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
         setTagEnum(res.data)

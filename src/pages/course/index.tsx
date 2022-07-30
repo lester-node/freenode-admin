@@ -110,8 +110,11 @@ export default () => {
     })
   }
 
-  const goArticle = () => {
-    history.push('/admin/courseArticle');
+  const goArticle = (record:any) => {
+    history.push({
+      pathname: '/admin/courseArticle',
+      state: { id: record.id },
+    });
   };
 
   const onFinish = () => {
@@ -162,8 +165,13 @@ export default () => {
       width: 100,
     },
     {
-      title: '文章数量',
-      dataIndex: 'articleNumber',
+      title: '展示的文章数',
+      dataIndex: 'articleTotal',
+      width: 100,
+    },
+    {
+      title: '总文章数',
+      dataIndex: 'articleTotalNum',
       width: 100,
     },
     {
@@ -203,7 +211,7 @@ export default () => {
       render: (value: any, record: any) => {
         return (
           <Space>
-            <a onClick={() => goArticle()}>文章</a>
+            <a onClick={() => goArticle(record)}>文章</a>
             <a onClick={() => goCreate(record)}>编辑</a>
             <a onClick={() => deleteRecord([record.id])}>删除</a>
           </Space>

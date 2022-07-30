@@ -48,13 +48,8 @@ export default () => {
     tableParams.tagId
   ])
 
-  useMount(() => {
-    classifyEnumRun()
-    tagEnumRun()
-  })
-
   const { run: classifyEnumRun } = useRequest(() => api.classifyList({}), {
-    manual: true,
+    manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
         setClassifyEnum(res.data)
@@ -68,7 +63,7 @@ export default () => {
   })
 
   const { run: tagEnumRun } = useRequest(() => api.tagEnum({}), {
-    manual: true,
+    manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
         setTagEnum(res.data)

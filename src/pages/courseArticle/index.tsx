@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Form,
   Row,
@@ -12,54 +12,80 @@ import {
   Switch,
   Modal,
   Pagination,
-  Tag
-} from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
-import type { TableRowSelection } from 'antd/lib/table/interface'
-import useRequest from '@ahooksjs/use-request'
-import styles from './index.less'
-import { history } from 'umi'
-import api from './service'
-import config from './config'
-import { useMount, useSize } from 'ahooks'
-import moment from 'moment'
+  Tag,
+} from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import type { TableRowSelection } from 'antd/lib/table/interface';
+import useRequest from '@ahooksjs/use-request';
+import styles from './index.less';
+import { history } from 'umi';
+import api from './service';
+import config from './config';
+import { useMount, useSize } from 'ahooks';
+import moment from 'moment';
 
-export default () => {
-  const ref: any = useRef()
-  const size: any = useSize(ref)
+export default (props: any) => {
+  const ref: any = useRef();
+  const size: any = useSize(ref);
   const tableHeight = {
-    y: size ? size.height - 240 : window.innerHeight - 310
-  }
+    y: size ? size.height - 240 : window.innerHeight - 310,
+  };
+  const state = props.location.state;
+  const [form] = Form.useForm();
+  const [courseEnum, setCourseEnum] = useState([]);
+  const [tableParams, setTableParams] = useState(config.TABLEPARAMS);
+  const [pageData, setPageData] = useState(config.PAGEDATA);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
 
-  const [form] = Form.useForm()
-  const [tableParams, setTableParams] = useState(config.TABLEPARAMS)
-  const [pageData, setPageData] = useState(config.PAGEDATA)
-  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([])
+  useMount(() => {
+    if (state?.id) {
+      form.setFieldsValue({ courseId: state.id });
+      setTableParams({ ...tableParams, courseId: state.id });
+    }
+  });
 
   useEffect(() => {
-    courseArticlePageRun(tableParams)
+    courseArticlePageRun(tableParams);
   }, [
     tableParams.page,
     tableParams.rows,
     tableParams.title,
-  ])
+    tableParams.courseId,
+  ]);
 
-  const { run: courseArticlePageRun } = useRequest((obj) => api.courseArticlePage(obj), {
-    manual: true,
+  const { run: courseArticlePageRun } = useRequest(
+    (obj) => api.courseArticlePage(obj),
+    {
+      manual: true,
+      onSuccess: (res: any) => {
+        if (res.result === 0) {
+          setPageData({
+            dataList: res.data.rows,
+            total: res.data.total,
+          });
+        } else {
+          message.error(res.message || '操作失败');
+        }
+      },
+      onError: (res: any) => {
+        message.error(res.message || '操作失败');
+      },
+    },
+  );
+
+  const { run: courseListRun } = useRequest(() => api.courseList({}), {
+    manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        setPageData({
-          dataList: res.data.rows,
-          total: res.data.total
-        })
+        setCourseEnum(res.data);
       } else {
-        message.error(res.message || '操作失败')
+        message.error(res.message || '操作失败');
       }
     },
     onError: (res: any) => {
-      message.error(res.message || '操作失败')
-    }
-  })
+      message.error(res.message || '操作失败');
+    },
+  });
 
   const { run: courseArticleDeleteRun } = useRequest(
     (obj) => api.courseArticleDelete(obj),
@@ -67,24 +93,24 @@ export default () => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          const num
-            = pageData.total - (tableParams.page - 1) * tableParams.rows
+          const num =
+            pageData.total - (tableParams.page - 1) * tableParams.rows;
           if (tableParams.page !== 1 && num === 1) {
-            setTableParams({ ...tableParams, page: tableParams.page - 1 })
+            setTableParams({ ...tableParams, page: tableParams.page - 1 });
           } else {
-            courseArticlePageRun(tableParams)
+            courseArticlePageRun(tableParams);
           }
-          setSelectedRowKeys([])
-          message.success(res.message || '删除成功')
+          setSelectedRowKeys([]);
+          message.success(res.message || '删除成功');
         } else {
-          message.error(res.message || '操作失败')
+          message.error(res.message || '操作失败');
         }
       },
       onError: (res: any) => {
-        message.error(res.message || '操作失败')
-      }
-    }
-  )
+        message.error(res.message || '操作失败');
+      },
+    },
+  );
 
   const { run: courseArticleChangeShowRun } = useRequest(
     (obj) => api.courseArticleChangeShow(obj),
@@ -92,40 +118,40 @@ export default () => {
       manual: true,
       onSuccess: (res: any) => {
         if (res.result === 0) {
-          courseArticlePageRun(tableParams)
-          message.success(res.message || '修改展示成功')
+          courseArticlePageRun(tableParams);
+          message.success(res.message || '修改展示成功');
         } else {
-          message.error(res.message || '操作失败')
+          message.error(res.message || '操作失败');
         }
       },
       onError: (res: any) => {
-        message.error(res.message || '操作失败')
-      }
-    }
-  )
+        message.error(res.message || '操作失败');
+      },
+    },
+  );
 
   const goEdit = () => {
-    history.push('/courseArticleEdit')
-  }
+    history.push('/courseArticleEdit');
+  };
 
   const onFinish = () => {
-    const values = form.getFieldsValue(true)
+    const values = form.getFieldsValue(true);
     setTableParams({
       ...tableParams,
-      ...values
-    })
-  }
+      ...values,
+    });
+  };
 
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(newSelectedRowKeys)
-    }
-  }
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+  };
 
   const editRecord = (record: any) => {
-    history.push({ pathname: '/courseArticleEdit', state: { id: record.id } })
-  }
+    history.push({ pathname: '/courseArticleEdit', state: { id: record.id } });
+  };
 
   const deleteRecord = (ids: any) => {
     Modal.confirm({
@@ -133,16 +159,16 @@ export default () => {
       icon: <ExclamationCircleOutlined />,
       content: '',
       okType: 'danger',
-      onOk () {
-        courseArticleDeleteRun({ ids: ids })
+      onOk() {
+        courseArticleDeleteRun({ ids: ids });
       },
-      onCancel () {}
-    })
-  }
+      onCancel() {},
+    });
+  };
 
   const switchChange = (value: any, record: any) => {
-    courseArticleChangeShowRun({ show: value, id: record.id })
-  }
+    courseArticleChangeShowRun({ show: value, id: record.id });
+  };
 
   const columns: any = [
     {
@@ -161,6 +187,11 @@ export default () => {
     {
       title: '权重',
       dataIndex: 'weight',
+      width: 100,
+    },
+    {
+      title: '教程分类',
+      dataIndex: 'courseName',
       width: 100,
     },
     {
@@ -212,12 +243,26 @@ export default () => {
               <Input placeholder="请输入标题" allowClear={true} />
             </Form.Item>
           </Col>
+          <Col span={8}>
+            <Form.Item name="courseId" label="教程分类">
+              <Select placeholder="请选择教程分类" allowClear={true}>
+                {Array.isArray(courseEnum) &&
+                  courseEnum.map((item: any) => {
+                    return (
+                      <Select.Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Select.Option>
+                    );
+                  })}
+              </Select>
+            </Form.Item>
+          </Col>
         </Row>
         <Row>
           <Col
             span={12}
             style={{
-              textAlign: 'left'
+              textAlign: 'left',
             }}
           >
             <Button type="primary" onClick={goEdit}>
@@ -225,7 +270,7 @@ export default () => {
             </Button>
             <Button
               style={{
-                margin: '0 8px'
+                margin: '0 8px',
               }}
               danger
               disabled={!selectedRowKeys.length}
@@ -237,7 +282,7 @@ export default () => {
           <Col
             span={12}
             style={{
-              textAlign: 'right'
+              textAlign: 'right',
             }}
           >
             <Button type="primary" onClick={onFinish}>
@@ -245,11 +290,11 @@ export default () => {
             </Button>
             <Button
               style={{
-                margin: '0 8px'
+                margin: '0 8px',
               }}
               onClick={() => {
-                setTableParams(config.TABLEPARAMS)
-                form.resetFields()
+                setTableParams(config.TABLEPARAMS);
+                form.resetFields();
               }}
             >
               重置
@@ -277,11 +322,11 @@ export default () => {
             setTableParams({
               ...tableParams,
               page: page,
-              rows: pageSize
-            })
+              rows: pageSize,
+            });
           }}
         />
       </div>
     </div>
-  )
-}
+  );
+};

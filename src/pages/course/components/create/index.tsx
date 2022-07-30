@@ -86,14 +86,18 @@ const Index = (props: any) => {
           name="name"
           rules={[{ required: true, message: '请输入教程名称!' }]}
         >
-          <Input />
+          <Input placeholder="请输入教程名称" />
         </Form.Item>
         <Form.Item
           label="权重"
           name="weight"
           rules={[{ required: true, message: '请输入权重!' }]}
         >
-          <InputNumber min={1} style={{width:'100%'}}/>
+          <InputNumber
+            min={1}
+            style={{ width: '100%' }}
+            placeholder="请输入权重"
+          />
         </Form.Item>
         <Form.Item label="展示" name="show" valuePropName="checked">
           <Switch checkedChildren="开启" unCheckedChildren="关闭" />

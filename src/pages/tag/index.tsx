@@ -148,13 +148,13 @@ export default () => {
       dataIndex: 'staffName',
       width: 100,
       render: (value: any, record: any, index: number) => {
-        return (pageData.page - 1) * pageData.rows + index + 1
-      }
+        return (pageData.page - 1) * pageData.rows + index + 1;
+      },
     },
     {
       title: '标签名称',
       dataIndex: 'name',
-      width: 100
+      width: 100,
     },
     {
       title: '是否展示',
@@ -168,13 +168,23 @@ export default () => {
             unCheckedChildren="关闭"
             onChange={(value) => switchChange(value, record)}
           />
-        )
-      }
+        );
+      },
     },
     {
       title: '颜色',
       dataIndex: 'color',
-      width: 100
+      width: 100,
+    },
+    {
+      title: '展示的文章数',
+      dataIndex: 'articleTotal',
+      width: 100,
+    },
+    {
+      title: '总文章数',
+      dataIndex: 'articleTotalNum',
+      width: 100,
     },
     {
       title: '最后更新时间',
@@ -182,8 +192,8 @@ export default () => {
       key: 'updatedAt',
       width: 120,
       render: (value: any) => {
-        return moment(value).format('YYYY-MM-DD HH:mm:ss')
-      }
+        return moment(value).format('YYYY-MM-DD HH:mm:ss');
+      },
     },
     {
       title: '操作',
@@ -196,10 +206,10 @@ export default () => {
             <a onClick={() => goCreate(record)}>编辑</a>
             <a onClick={() => deleteRecord([record.id])}>删除</a>
           </Space>
-        )
-      }
-    }
-  ]
+        );
+      },
+    },
+  ];
 
   return (
     <div className={styles.content} ref={ref}>
