@@ -33,7 +33,7 @@ export default () => {
 
   const [form] = Form.useForm()
   const [classifyEnum, setClassifyEnum] = useState([])
-  const [tagEnum, setTagEnum] = useState([])
+  const [tagList, setTagList] = useState([])
   const [tableParams, setTableParams] = useState(config.TABLEPARAMS)
   const [pageData, setPageData] = useState(config.PAGEDATA)
   const [selectedRowKeys, setSelectedRowKeys] = useState<any>([])
@@ -62,11 +62,11 @@ export default () => {
     }
   })
 
-  const { run: tagEnumRun } = useRequest(() => api.tagEnum({}), {
+  const { run: tagListRun } = useRequest(() => api.tagList({}), {
     manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        setTagEnum(res.data)
+        setTagList(res.data)
       } else {
         message.error(res.message || '操作失败')
       }
@@ -275,8 +275,8 @@ export default () => {
           <Col span={8}>
             <Form.Item name="tagId" label="标签">
               <Select placeholder="请选择标签" allowClear={true}>
-                {Array.isArray(tagEnum)
-                  && tagEnum.map((item: any) => {
+                {Array.isArray(tagList)
+                  && tagList.map((item: any) => {
                     return (
                       <Select.Option key={item.id} value={item.id}>
                         {item.name}

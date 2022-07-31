@@ -5,7 +5,7 @@ const api = {
   articleDelete: (data: any) => post('/v1/article/articleDelete', data),
   articleChangeShow: (data: any) => post('/v1/article/articleChangeShow', data),
   classifyList: (data: any) => post('/v1/classify/classifyList', data),
-  tagEnum: (data: any) => post('/v1/tag/tagEnum', data)
+  tagList: (data: any) => post('/v1/tag/tagList', data)
 }
 
 export default api

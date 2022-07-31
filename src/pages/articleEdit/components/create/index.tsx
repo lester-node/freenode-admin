@@ -10,7 +10,7 @@ const Index = (props: any) => {
   const { info, visible } = modal
   const [form] = Form.useForm()
   const [classifyEnum, setClassifyEnum] = useState([])
-  const [tagEnum, setTagEnum] = useState([])
+  const [tagList, setTagList] = useState([])
 
   useMount(() => {
     if (info?.id) {
@@ -94,19 +94,19 @@ const Index = (props: any) => {
     },
   });
 
-  const { run: tagEnumRun } = useRequest(() => api.tagEnum({}), {
+  const { run: tagListRun } = useRequest(() => api.tagList({}), {
     manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        setTagEnum(res.data)
+        setTagList(res.data);
       } else {
-        message.error(res.message || '操作失败')
+        message.error(res.message || '操作失败');
       }
     },
     onError: (res: any) => {
-      message.error(res.message || '操作失败')
-    }
-  })
+      message.error(res.message || '操作失败');
+    },
+  });
 
   return (
     <Modal {...viewModalProps}>
@@ -122,13 +122,13 @@ const Index = (props: any) => {
             allowClear={true}
             labelInValue={true}
           >
-            {Array.isArray(classifyEnum)
-              && classifyEnum.map((item: any) => {
+            {Array.isArray(classifyEnum) &&
+              classifyEnum.map((item: any) => {
                 return (
                   <Select.Option key={item.id} value={item.id}>
                     {item.name}
                   </Select.Option>
-                )
+                );
               })}
           </Select>
         </Form.Item>
@@ -139,13 +139,13 @@ const Index = (props: any) => {
             labelInValue={true}
             mode="multiple"
           >
-            {Array.isArray(tagEnum)
-              && tagEnum.map((item: any) => {
+            {Array.isArray(tagList) &&
+              tagList.map((item: any) => {
                 return (
                   <Select.Option key={item.id} value={item.id}>
                     {item.name}
                   </Select.Option>
-                )
+                );
               })}
           </Select>
         </Form.Item>
@@ -154,7 +154,7 @@ const Index = (props: any) => {
         </Form.Item>
       </Form>
     </Modal>
-  )
+  );
 }
 
 export default Index
