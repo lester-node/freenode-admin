@@ -104,7 +104,7 @@ const Index = (props: any) => {
         </Form.Item>
       </Form>
     </Modal>
-  );
+  )
 }
 
 export default Index

@@ -49,12 +49,16 @@ const Index = (props: any) => {
 
   const onFinish = () => {
     const formData = form.getFieldsValue(true)
-    console.log('formdata',formData);
+    console.log('formdata', formData)
     const sendData = {
       classifyId: formData?.classifyId?.value,
       classifyName: formData?.classifyId?.label,
-      tagId: formData?.tagId?.length ? formData?.tagId?.map((item: any) => item.value).join(',') : undefined,
-      tagName: formData?.tagId?.length ? formData?.tagId?.map((item: any) => item.label).join(',') : undefined,
+      tagId: formData?.tagId?.length
+        ? formData?.tagId?.map((item: any) => item.value).join(',')
+        : undefined,
+      tagName: formData?.tagId?.length
+        ? formData?.tagId?.map((item: any) => item.label).join(',')
+        : undefined,
       show: formData?.show,
       id: info?.id,
       content: info?.content,
@@ -84,29 +88,29 @@ const Index = (props: any) => {
     manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        setClassifyEnum(res.data);
+        setClassifyEnum(res.data)
       } else {
-        message.error(res.message || '操作失败');
+        message.error(res.message || '操作失败')
       }
     },
     onError: (res: any) => {
-      message.error(res.message || '操作失败');
-    },
-  });
+      message.error(res.message || '操作失败')
+    }
+  })
 
   const { run: tagListRun } = useRequest(() => api.tagList({}), {
     manual: false,
     onSuccess: (res: any) => {
       if (res.result === 0) {
-        setTagList(res.data);
+        setTagList(res.data)
       } else {
-        message.error(res.message || '操作失败');
+        message.error(res.message || '操作失败')
       }
     },
     onError: (res: any) => {
-      message.error(res.message || '操作失败');
-    },
-  });
+      message.error(res.message || '操作失败')
+    }
+  })
 
   return (
     <Modal {...viewModalProps}>
@@ -122,13 +126,13 @@ const Index = (props: any) => {
             allowClear={true}
             labelInValue={true}
           >
-            {Array.isArray(classifyEnum) &&
-              classifyEnum.map((item: any) => {
+            {Array.isArray(classifyEnum)
+              && classifyEnum.map((item: any) => {
                 return (
                   <Select.Option key={item.id} value={item.id}>
                     {item.name}
                   </Select.Option>
-                );
+                )
               })}
           </Select>
         </Form.Item>
@@ -139,13 +143,13 @@ const Index = (props: any) => {
             labelInValue={true}
             mode="multiple"
           >
-            {Array.isArray(tagList) &&
-              tagList.map((item: any) => {
+            {Array.isArray(tagList)
+              && tagList.map((item: any) => {
                 return (
                   <Select.Option key={item.id} value={item.id}>
                     {item.name}
                   </Select.Option>
-                );
+                )
               })}
           </Select>
         </Form.Item>
@@ -154,7 +158,7 @@ const Index = (props: any) => {
         </Form.Item>
       </Form>
     </Modal>
-  );
+  )
 }
 
 export default Index
