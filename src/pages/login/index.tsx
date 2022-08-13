@@ -20,7 +20,7 @@ export default () => {
     onSuccess: (res: any) => {
       if (res.result === 0) {
         localStorage.setItem('token', res.data.token)
-        history.push('/admin/preface')
+        history.push('/admin/course')
       } else {
         message.error(res.message || '操作失败')
       }
