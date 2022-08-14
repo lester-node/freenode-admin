@@ -172,11 +172,6 @@ export default () => {
       }
     },
     {
-      title: '颜色',
-      dataIndex: 'color',
-      width: 100
-    },
-    {
       title: '展示的文章数',
       dataIndex: 'articleTotal',
       width: 100
