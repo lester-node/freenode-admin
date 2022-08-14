@@ -77,7 +77,7 @@ export default (props: any) => {
           <div
             className={collapsed ? styles.textClass : styles.textActiveClass}
           >
-            高效率开发学习
+            拾柒的博客
           </div>
         </div>
         <Menu

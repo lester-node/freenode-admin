@@ -33,7 +33,7 @@ export default () => {
   return (
     <div className={styles.login}>
       <div className={styles.modal}>
-        <div className={styles.top}>freenode后台管理系统</div>
+        <div className={styles.top}>拾柒的博客后台管理系统</div>
         <div className={styles.middle}>
           <input
             type="text"
@@ -65,7 +65,13 @@ export default () => {
         </div>
         <div className={styles.msg}>
           没有账号?&nbsp;
-          <a href="#">游客登录</a>
+          <a
+            onClick={() => {
+              history.push('/admin/course')
+            }}
+          >
+            游客登录
+          </a>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { defineConfig } from 'umi';
 import routes from './routes';
 import proxy from './proxy';
+import theme from './theme';
 
 export default defineConfig({
   nodeModulesTransform: {
@@ -9,6 +10,7 @@ export default defineConfig({
   },
   routes,
   proxy,
+  theme,
   fastRefresh: {},
   targets: {
     ie: 11,

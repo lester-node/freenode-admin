@@ -1,7 +1,8 @@
 .login {
   width: 100vw;
   height: 100vh;
-  background-image: linear-gradient(to right, #fbc2eb, #a6c1ee);
+  background: url('./bg.jpeg') no-repeat center center;
+  // background-image: linear-gradient(to right, #fbc2eb, #a6c1ee);
 }
 
 .modal {
@@ -39,7 +40,7 @@
     width: 80%;
     padding: 10px;
     margin-bottom: 20px;
-    font-size: 15px;
+    font-size: @default-text-size;
     border: 1px solid #dedede;
     outline: none;
   }
@@ -51,7 +52,7 @@
     color: #fff;
     text-align: center;
     cursor: pointer;
-    background-color: #2e82ff;
+    background-color: @primary-color;
   }
 }
 
@@ -62,5 +63,5 @@
 
 a {
   text-decoration-line: none;
-  color: #2e82ff;
+  color: @primary-color;
 }

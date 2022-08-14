@@ -6,20 +6,20 @@
   .logoBig {
     display: flex;
     height: 40px;
-    font-size: 14px;
+    font-size: @default-text-size;
     font-weight: bold;
     align-items: center;
 
     .logoClass {
       padding-left: 32px;
-      font-size: 16px;
+      font-size: @default-text-size;
       transition: font-size 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
         padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), color 0.3s;
     }
 
     .logoActiveClass {
       padding-left: 24px;
-      font-size: 14px;
+      font-size: @default-text-size;
       transition: font-size 0.15s cubic-bezier(0.215, 0.61, 0.355, 1),
         padding 0.1s cubic-bezier(0.645, 0.045, 0.355, 1), color 0.3s;
     }

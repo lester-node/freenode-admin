@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import axios, { Method } from 'axios'
 import { history } from 'umi'
+import { message } from 'antd'
 
 interface Response<T> {
   data: T;
@@ -18,7 +19,8 @@ axios.interceptors.response.use(
       switch (error.response.status) {
       case 401:
         localStorage.removeItem('token')
-        history.push('/')
+        // history.push('/')
+        message.error('请重新登录！')
       }
     }
     return Promise.reject(error.response.data)
