@@ -9,6 +9,7 @@ import { useMount } from 'ahooks'
 import Create from './components/create'
 import { Editor } from '@toast-ui/react-editor'
 import '@toast-ui/editor/dist/toastui-editor.css'
+import '../../style/toastui-editor-viewer.css';
 import '@toast-ui/editor/dist/i18n/zh-cn'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.min.css'
@@ -107,9 +108,9 @@ export default (props: any) => {
         >
           发布文章
         </Button>
-        <Button className={styles.topSubmit} onClick={goSubmitDraft}>
+        {/* <Button className={styles.topSubmit} onClick={goSubmitDraft}>
           保存草稿
-        </Button>
+        </Button> */}
       </div>
       <div className={styles.markdownClass}>
         <Editor

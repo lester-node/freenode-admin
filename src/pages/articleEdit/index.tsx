@@ -9,6 +9,7 @@ import { useMount } from 'ahooks'
 import Create from './components/create'
 import { Editor } from '@toast-ui/react-editor'
 import '@toast-ui/editor/dist/toastui-editor.css'
+import '../../style/toastui-editor-viewer.css';
 import '@toast-ui/editor/dist/i18n/zh-cn'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.min.css'
@@ -115,24 +116,23 @@ export default (props: any) => {
         <Editor
           previewStyle="vertical"
           height="calc(100vh - 62px)"
-          initialEditType="wysiwyg" // wysiwyg、markdown
+          initialEditType="markdown" // wysiwyg、markdown
           language="zh-CN"
           onChange={handleEditorChange}
+          hideModeSwitch={true}
           useCommandShortcut={true} // 是否使用键盘快捷键执行命令
           ref={editorRef}
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
         />
       </div>
-      {createModal?.visible
-        ? (
-          <Create
-            modal={createModal}
-            onClose={() => {
-              setCreateModal({ ...createModal, visible: false })
-            }}
-          />
-        )
-        : null}
+      {createModal?.visible ? (
+        <Create
+          modal={createModal}
+          onClose={() => {
+            setCreateModal({ ...createModal, visible: false });
+          }}
+        />
+      ) : null}
     </div>
-  )
+  );
 }
