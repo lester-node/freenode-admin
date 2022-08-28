@@ -10,11 +10,6 @@ export default [
     component: '@/pages/layouts',
     routes: [
       {
-        title: '前言',
-        path: './preface',
-        component: '@/pages/preface',
-      },
-      {
         title: '教程',
         path: './course',
         component: '@/pages/course',
@@ -38,16 +33,6 @@ export default [
         title: '标签',
         path: './tag',
         component: '@/pages/tag',
-      },
-      {
-        title: '作品',
-        path: './works',
-        component: '@/pages/works',
-      },
-      {
-        title: '留言',
-        path: './information',
-        component: '@/pages/information',
       },
     ],
   },

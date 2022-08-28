@@ -8,8 +8,7 @@ import api from './service'
 import { useMount } from 'ahooks'
 import Create from './components/create'
 import { Editor } from '@toast-ui/react-editor'
-import '@toast-ui/editor/dist/toastui-editor.css'
-import '../../style/toastui-editor-viewer.css';
+import '../../style/toastui-editor.css'
 import '@toast-ui/editor/dist/i18n/zh-cn'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.min.css'
@@ -18,7 +17,7 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight'
 
 export default (props: any) => {
   const editorRef = useRef<any>()
-  const state = props.location.state
+  const query = props.location.query
   const [courseArticleData, setCourseArticleData] = useState<any>({})
   const [createModal, setCreateModal] = useState({
     info: {},
@@ -26,8 +25,8 @@ export default (props: any) => {
   })
 
   useMount(() => {
-    if (state?.id) {
-      courseArticleSelectOneRun({ id: state?.id })
+    if (query?.id) {
+      courseArticleSelectOneRun({ id: query?.id })
     }
   })
 
@@ -71,17 +70,11 @@ export default (props: any) => {
     }
     setCreateModal({
       info: {
-        id: state?.id,
+        id: query?.id,
         ...courseArticleData
       },
       visible: true
     })
-  }
-
-  const goSubmitDraft = () => {
-    if (!courseArticleData?.title || !courseArticleData?.content) {
-      message.error('标题或内容不能为空')
-    }
   }
 
   return (
@@ -108,17 +101,15 @@ export default (props: any) => {
         >
           发布文章
         </Button>
-        {/* <Button className={styles.topSubmit} onClick={goSubmitDraft}>
-          保存草稿
-        </Button> */}
       </div>
       <div className={styles.markdownClass}>
         <Editor
           previewStyle="vertical"
           height="calc(100vh - 62px)"
-          initialEditType="wysiwyg" // wysiwyg、markdown
+          initialEditType="markdown" // wysiwyg、markdown
           language="zh-CN"
           onChange={handleEditorChange}
+          hideModeSwitch={true}
           useCommandShortcut={true} // 是否使用键盘快捷键执行命令
           ref={editorRef}
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}

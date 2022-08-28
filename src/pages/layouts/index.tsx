@@ -1,13 +1,10 @@
 import { Layout, Menu, MenuProps, ConfigProvider } from 'antd'
 import zhCN from 'antd/es/locale/zh_CN'
 import {
-  HeartOutlined,
   DashboardOutlined,
   BugOutlined,
   DesktopOutlined,
   CloudOutlined,
-  ScissorOutlined,
-  CompassOutlined,
   HighlightOutlined,
   KeyOutlined
 } from '@ant-design/icons'
@@ -43,14 +40,11 @@ export default (props: any) => {
   }, [window.location.pathname])
 
   const items: MenuItem[] = [
-    // getItem('前言', '/admin/preface', <HeartOutlined />),
     getItem('教程', '/admin/course', <HighlightOutlined />),
     getItem('教程文章', '/admin/courseArticle', <KeyOutlined />),
     getItem('文章', '/admin/article', <BugOutlined />),
     getItem('分类', '/admin/classify', <DashboardOutlined />),
     getItem('标签', '/admin/tag', <DesktopOutlined />)
-    // getItem('作品', '/admin/works', <ScissorOutlined />),
-    // getItem('留言', '/admin/information', <CompassOutlined />),
   ]
 
   const menuSelect = (val: any) => {

@@ -8,8 +8,7 @@ import api from './service'
 import { useMount } from 'ahooks'
 import Create from './components/create'
 import { Editor } from '@toast-ui/react-editor'
-import '@toast-ui/editor/dist/toastui-editor.css'
-import '../../style/toastui-editor-viewer.css';
+import '../../style/toastui-editor.css'
 import '@toast-ui/editor/dist/i18n/zh-cn'
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-tomorrow.min.css'
@@ -18,7 +17,7 @@ import codeSyntaxHighlight from '@toast-ui/editor-plugin-code-syntax-highlight'
 
 export default (props: any) => {
   const editorRef = useRef<any>()
-  const state = props.location.state
+  const query = props.location.query
   const [articleData, setArticleData] = useState<any>({})
   const [createModal, setCreateModal] = useState({
     info: {},
@@ -26,8 +25,8 @@ export default (props: any) => {
   })
 
   useMount(() => {
-    if (state?.id) {
-      articleSelectOneRun({ id: state?.id })
+    if (query?.id) {
+      articleSelectOneRun({ id: query?.id })
     }
   })
 
@@ -71,17 +70,11 @@ export default (props: any) => {
     }
     setCreateModal({
       info: {
-        id: state?.id,
+        id: query?.id,
         ...articleData
       },
       visible: true
     })
-  }
-
-  const goSubmitDraft = () => {
-    if (!articleData?.title || !articleData?.content) {
-      message.error('标题或内容不能为空')
-    }
   }
 
   return (
@@ -108,9 +101,6 @@ export default (props: any) => {
         >
           发布文章
         </Button>
-        <Button className={styles.topSubmit} onClick={goSubmitDraft}>
-          保存草稿
-        </Button>
       </div>
       <div className={styles.markdownClass}>
         <Editor
@@ -125,14 +115,16 @@ export default (props: any) => {
           plugins={[[codeSyntaxHighlight, { highlighter: Prism }]]}
         />
       </div>
-      {createModal?.visible ? (
-        <Create
-          modal={createModal}
-          onClose={() => {
-            setCreateModal({ ...createModal, visible: false });
-          }}
-        />
-      ) : null}
+      {createModal?.visible
+        ? (
+          <Create
+            modal={createModal}
+            onClose={() => {
+              setCreateModal({ ...createModal, visible: false })
+            }}
+          />
+        )
+        : null}
     </div>
-  );
+  )
 }

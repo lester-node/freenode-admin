@@ -18,7 +18,7 @@ import useRequest from '@ahooksjs/use-request'
 import styles from './index.less'
 import api from './service'
 import config from './config'
-import { useMount, useSize } from 'ahooks'
+import { useSize } from 'ahooks'
 import moment from 'moment'
 import Create from './components/create'
 

@@ -11,8 +11,7 @@ import {
   Space,
   Switch,
   Modal,
-  Pagination,
-  Tag
+  Pagination
 } from 'antd'
 import { ExclamationCircleOutlined } from '@ant-design/icons'
 import type { TableRowSelection } from 'antd/lib/table/interface'
@@ -30,7 +29,7 @@ export default (props: any) => {
   const tableHeight = {
     y: size ? size.height - 240 : window.innerHeight - 310
   }
-  const state = props.location.state
+  const query = props.location.query
   const [form] = Form.useForm()
   const [courseEnum, setCourseEnum] = useState([])
   const [tableParams, setTableParams] = useState(config.TABLEPARAMS)
@@ -38,9 +37,9 @@ export default (props: any) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<any>([])
 
   useMount(() => {
-    if (state?.id) {
-      form.setFieldsValue({ courseId: state.id })
-      setTableParams({ ...tableParams, courseId: state.id })
+    if (query?.id) {
+      form.setFieldsValue({ courseId: query.id })
+      setTableParams({ ...tableParams, courseId: query.id })
     }
   })
 
@@ -150,7 +149,7 @@ export default (props: any) => {
   }
 
   const editRecord = (record: any) => {
-    history.push({ pathname: '/courseArticleEdit', state: { id: record.id } })
+    history.push(`/courseArticleEdit?id=${record.id}`)
   }
 
   const deleteRecord = (ids: any) => {

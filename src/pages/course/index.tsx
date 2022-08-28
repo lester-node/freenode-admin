@@ -111,10 +111,7 @@ export default () => {
   }
 
   const goArticle = (record: any) => {
-    history.push({
-      pathname: '/admin/courseArticle',
-      state: { id: record.id }
-    })
+    history.push(`/admin/courseArticle?id=${record.id}`)
   }
 
   const onFinish = () => {

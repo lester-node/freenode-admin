@@ -156,7 +156,7 @@ export default () => {
   }
 
   const editRecord = (record: any) => {
-    history.push({ pathname: '/articleEdit', state: { id: record.id } })
+    history.push(`/articleEdit?id=${record.id}`)
   }
 
   const deleteRecord = (ids: any) => {
