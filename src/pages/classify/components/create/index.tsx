@@ -1,65 +1,65 @@
-import React, { useRef, useState } from 'react'
-import { useMount } from 'ahooks'
-import useRequest from '@ahooksjs/use-request'
-import { Modal, Button, Form, Input, message, Switch } from 'antd'
-import api from '../../service'
+import React, { useRef, useState } from "react";
+import { useMount } from "ahooks";
+import useRequest from "@ahooksjs/use-request";
+import { Modal, Button, Form, Input, message, Switch } from "antd";
+import api from "../../service";
 
 const Index = (props: any) => {
-  const { modal, onClose } = props
-  const { info, visible, onReset } = modal
-  const [form] = Form.useForm()
+  const { modal, onClose } = props;
+  const { info, visible, onReset } = modal;
+  const [form] = Form.useForm();
 
   useMount(() => {
     if (info?.id) {
       form.setFieldsValue({
         name: info.name,
-        show: info.show
-      })
+        show: info.show,
+      });
     } else {
-      form.setFieldsValue({ show: true })
+      form.setFieldsValue({ show: true });
     }
-  })
+  });
 
   const { run: classifyCreateOrUpdateRun } = useRequest(
     (obj) => (obj?.id ? api.classifyUpdate(obj) : api.classifyCreate(obj)),
     {
       manual: true,
-      onSuccess: (res: any) => {
+      onSuccess: (res: { result: number; data: any; message: string }) => {
         if (res.result === 0) {
-          message.success(res.message || '操作成功')
-          onReset()
-          onClose()
+          message.success(res.message || "操作成功");
+          onReset();
+          onClose();
         } else {
-          message.error(res.message || '操作失败')
+          message.error(res.message || "操作失败");
         }
       },
-      onError: (res: any) => {
-        message.error(res.message || '操作失败')
-      }
+      onError: (res: { message: string }) => {
+        message.error(res.message || "操作失败");
+      },
     }
-  )
+  );
 
   const onFinish = async () => {
     try {
-      await form.validateFields()
-      const formData = form.getFieldsValue(true)
+      await form.validateFields();
+      const formData = form.getFieldsValue(true);
       const sendData = {
         show: formData?.show,
         id: info?.id,
-        name: formData?.name
-      }
-      console.log('新增参数', sendData)
-      classifyCreateOrUpdateRun(sendData)
+        name: formData?.name,
+      };
+      console.log("新增参数", sendData);
+      classifyCreateOrUpdateRun(sendData);
     } catch (errorInfo) {
-      console.log('Failed:', errorInfo)
+      console.log("Failed:", errorInfo);
     }
-  }
+  };
 
   const modalProps = {
-    title: '新增',
+    title: "新增",
     visible: visible,
     destroyOnClose: true,
-    width: '500px',
+    width: "500px",
     onCancel: onClose,
     footer: [
       <Button key="cancal" onClick={onClose}>
@@ -67,9 +67,9 @@ const Index = (props: any) => {
       </Button>,
       <Button key="publish" onClick={onFinish} type="primary">
         新增
-      </Button>
-    ]
-  }
+      </Button>,
+    ],
+  };
 
   return (
     <Modal {...modalProps}>
@@ -82,7 +82,7 @@ const Index = (props: any) => {
         <Form.Item
           label="分类名称"
           name="name"
-          rules={[{ required: true, message: '请输入分类名称!' }]}
+          rules={[{ required: true, message: "请输入分类名称!" }]}
         >
           <Input />
         </Form.Item>
@@ -91,7 +91,7 @@ const Index = (props: any) => {
         </Form.Item>
       </Form>
     </Modal>
-  )
-}
+  );
+};
 
-export default Index
+export default Index;

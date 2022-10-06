@@ -2,12 +2,12 @@ const config = {
   PAGEDATA: {
     page: 1,
     rows: 10,
-    name: ''
+    name: "",
   },
   TABLEPARAMS: {
     dataList: [],
-    total: 0
-  }
-}
+    total: 0,
+  },
+};
 
-export default config
+export default config;

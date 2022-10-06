@@ -1,59 +1,64 @@
-import { Layout, Menu, MenuProps, ConfigProvider } from 'antd'
-import zhCN from 'antd/es/locale/zh_CN'
+import { Layout, Menu, MenuProps, ConfigProvider } from "antd";
+import zhCN from "antd/es/locale/zh_CN";
 import {
   DashboardOutlined,
   BugOutlined,
   DesktopOutlined,
   CloudOutlined,
   HighlightOutlined,
-  KeyOutlined
-} from '@ant-design/icons'
-import styles from './index.less'
-import React, { useEffect, useState } from 'react'
-import { history } from 'umi'
-const { Content, Footer, Sider } = Layout
+  KeyOutlined,
+} from "@ant-design/icons";
+import styles from "./index.less";
+import React, { useEffect, useState } from "react";
+import { history } from "umi";
+const { Content, Footer, Sider } = Layout;
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>["items"][number];
 
-function getItem (
+function getItem(
   label: React.ReactNode,
   key: React.Key,
   icon?: React.ReactNode,
   children?: MenuItem[],
-  type?: 'group'
+  type?: "group"
 ): MenuItem {
   return {
     key,
     icon,
     children,
     label,
-    type
-  } as MenuItem
+    type,
+  } as MenuItem;
 }
 
 export default (props: any) => {
-  const [collapsed, setCollapsed] = useState(false)
-  const [selectMenu, setSelectMenu] = useState<any>([])
+  const [collapsed, setCollapsed] = useState(false);
+  const [selectMenu, setSelectMenu] = useState([""]);
+  const username = localStorage.getItem("username");
 
   useEffect(() => {
-    setSelectMenu([window.location.pathname])
-  }, [window.location.pathname])
+    setSelectMenu([window.location.pathname]);
+  }, [window.location.pathname]);
 
   const items: MenuItem[] = [
-    getItem('教程', '/admin/course', <HighlightOutlined />),
-    getItem('教程文章', '/admin/courseArticle', <KeyOutlined />),
-    getItem('文章', '/admin/article', <BugOutlined />),
-    getItem('分类', '/admin/classify', <DashboardOutlined />),
-    getItem('标签', '/admin/tag', <DesktopOutlined />)
-  ]
+    getItem("文章", "/admin/article", <BugOutlined />),
+    getItem("分类", "/admin/classify", <DashboardOutlined />),
+    getItem("标签", "/admin/tag", <DesktopOutlined />),
+    ...(username == "root"
+      ? [getItem("教程", "/admin/course", <HighlightOutlined />)]
+      : []),
+    ...(username == "root"
+      ? [getItem("教程文章", "/admin/courseArticle", <KeyOutlined />)]
+      : []),
+  ];
 
-  const menuSelect = (val: any) => {
-    history.push(val.key)
-  }
+  const menuSelect = (val: { key: string }) => {
+    history.push(val.key);
+  };
 
   const onCollapse = (collapsed: boolean) => {
-    setCollapsed(collapsed)
-  }
+    setCollapsed(collapsed);
+  };
 
   return (
     <Layout className={styles.layout}>
@@ -98,5 +103,5 @@ export default (props: any) => {
         </Footer>
       </Layout>
     </Layout>
-  )
-}
+  );
+};

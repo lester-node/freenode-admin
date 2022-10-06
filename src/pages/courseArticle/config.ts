@@ -1,15 +1,15 @@
 const config = {
   PAGEDATA: {
     dataList: [],
-    total: 0
+    total: 0,
   },
   TABLEPARAMS: {
     page: 1,
     rows: 10,
-    title: '',
-    courseId: ''
+    title: "",
+    courseId: "",
   },
-  COLOR: ['green', 'red', 'volcano', 'orange', 'gold', 'lime', 'cyan']
-}
+  COLOR: ["green", "red", "volcano", "orange", "gold", "lime", "cyan"],
+};
 
-export default config
+export default config;

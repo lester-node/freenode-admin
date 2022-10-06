@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from "react";
 import {
   Form,
   Row,
@@ -12,206 +12,206 @@ import {
   Switch,
   Modal,
   Pagination,
-  Tag
-} from 'antd'
-import { ExclamationCircleOutlined } from '@ant-design/icons'
-import type { TableRowSelection } from 'antd/lib/table/interface'
-import useRequest from '@ahooksjs/use-request'
-import styles from './index.less'
-import { history } from 'umi'
-import api from './service'
-import config from './config'
-import { useMount, useSize } from 'ahooks'
-import moment from 'moment'
+  Tag,
+} from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import type { TableRowSelection } from "antd/lib/table/interface";
+import useRequest from "@ahooksjs/use-request";
+import styles from "./index.less";
+import { history } from "umi";
+import api from "./service";
+import config from "./config";
+import { useSize } from "ahooks";
+import moment from "moment";
 
 export default () => {
-  const ref: any = useRef()
-  const size: any = useSize(ref)
+  const ref: any = useRef();
+  const size: any = useSize(ref);
   const tableHeight = {
-    y: size ? size.height - 240 : window.innerHeight - 310
-  }
+    y: size ? size.height - 240 : window.innerHeight - 310,
+  };
 
-  const [form] = Form.useForm()
-  const [classifyEnum, setClassifyEnum] = useState([])
-  const [tagList, setTagList] = useState([])
-  const [tableParams, setTableParams] = useState(config.TABLEPARAMS)
-  const [pageData, setPageData] = useState(config.PAGEDATA)
-  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([])
+  const [form] = Form.useForm();
+  const [classifyEnum, setClassifyEnum] = useState([]);
+  const [tagList, setTagList] = useState([]);
+  const [tableParams, setTableParams] = useState(config.TABLEPARAMS);
+  const [pageData, setPageData] = useState(config.PAGEDATA);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<any>([]);
 
   useEffect(() => {
-    articlePageRun(tableParams)
+    articlePageRun(tableParams);
   }, [
     tableParams.page,
     tableParams.rows,
     tableParams.title,
     tableParams.classifyId,
-    tableParams.tagId
-  ])
+    tableParams.tagId,
+  ]);
 
   const { run: classifyEnumRun } = useRequest(() => api.classifyList({}), {
     manual: false,
-    onSuccess: (res: any) => {
+    onSuccess: (res: { result: number; data: any; message: string }) => {
       if (res.result === 0) {
-        setClassifyEnum(res.data)
+        setClassifyEnum(res.data);
       } else {
-        message.error(res.message || '操作失败')
+        message.error(res.message || "操作失败");
       }
     },
-    onError: (res: any) => {
-      message.error(res.message || '操作失败')
-    }
-  })
+    onError: (res: { message: string }) => {
+      message.error(res.message || "操作失败");
+    },
+  });
 
   const { run: tagListRun } = useRequest(() => api.tagList({}), {
     manual: false,
-    onSuccess: (res: any) => {
+    onSuccess: (res: { result: number; data: any; message: string }) => {
       if (res.result === 0) {
-        setTagList(res.data)
+        setTagList(res.data);
       } else {
-        message.error(res.message || '操作失败')
+        message.error(res.message || "操作失败");
       }
     },
-    onError: (res: any) => {
-      message.error(res.message || '操作失败')
-    }
-  })
+    onError: (res: { message: string }) => {
+      message.error(res.message || "操作失败");
+    },
+  });
 
   const { run: articlePageRun } = useRequest((obj) => api.articlePage(obj), {
     manual: true,
-    onSuccess: (res: any) => {
+    onSuccess: (res: { result: number; data: any; message: string }) => {
       if (res.result === 0) {
         setPageData({
           dataList: res.data.rows,
-          total: res.data.total
-        })
+          total: res.data.total,
+        });
       } else {
-        message.error(res.message || '操作失败')
+        message.error(res.message || "操作失败");
       }
     },
-    onError: (res: any) => {
-      message.error(res.message || '操作失败')
-    }
-  })
+    onError: (res: { message: string }) => {
+      message.error(res.message || "操作失败");
+    },
+  });
 
   const { run: articleDeleteRun } = useRequest(
     (obj) => api.articleDelete(obj),
     {
       manual: true,
-      onSuccess: (res: any) => {
+      onSuccess: (res: { result: number; data: any; message: string }) => {
         if (res.result === 0) {
-          const num
-            = pageData.total - (tableParams.page - 1) * tableParams.rows
+          const num =
+            pageData.total - (tableParams.page - 1) * tableParams.rows;
           if (tableParams.page !== 1 && num === 1) {
-            setTableParams({ ...tableParams, page: tableParams.page - 1 })
+            setTableParams({ ...tableParams, page: tableParams.page - 1 });
           } else {
-            articlePageRun(tableParams)
+            articlePageRun(tableParams);
           }
-          setSelectedRowKeys([])
-          message.success(res.message || '删除成功')
+          setSelectedRowKeys([]);
+          message.success(res.message || "删除成功");
         } else {
-          message.error(res.message || '操作失败')
+          message.error(res.message || "操作失败");
         }
       },
-      onError: (res: any) => {
-        message.error(res.message || '操作失败')
-      }
+      onError: (res: { message: string }) => {
+        message.error(res.message || "操作失败");
+      },
     }
-  )
+  );
 
   const { run: articleChangeShowRun } = useRequest(
     (obj) => api.articleChangeShow(obj),
     {
       manual: true,
-      onSuccess: (res: any) => {
+      onSuccess: (res: { result: number; data: any; message: string }) => {
         if (res.result === 0) {
-          articlePageRun(tableParams)
-          message.success(res.message || '修改展示成功')
+          articlePageRun(tableParams);
+          message.success(res.message || "修改展示成功");
         } else {
-          message.error(res.message || '操作失败')
+          message.error(res.message || "操作失败");
         }
       },
-      onError: (res: any) => {
-        message.error(res.message || '操作失败')
-      }
+      onError: (res: { message: string }) => {
+        message.error(res.message || "操作失败");
+      },
     }
-  )
+  );
 
   const goEdit = () => {
-    history.push('/articleEdit')
-  }
+    history.push("/articleEdit");
+  };
 
   const onFinish = () => {
-    const values = form.getFieldsValue(true)
+    const values = form.getFieldsValue(true);
     setTableParams({
       ...tableParams,
-      ...values
-    })
-  }
+      ...values,
+    });
+  };
 
   const rowSelection: TableRowSelection<any> = {
     selectedRowKeys,
     onChange: (newSelectedRowKeys: React.Key[]) => {
-      setSelectedRowKeys(newSelectedRowKeys)
-    }
-  }
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+  };
 
-  const editRecord = (record: any) => {
-    history.push(`/articleEdit?id=${record.id}`)
-  }
+  const editRecord = (record: { id: string }) => {
+    history.push(`/articleEdit?id=${record.id}`);
+  };
 
-  const deleteRecord = (ids: any) => {
+  const deleteRecord = (ids: string[]) => {
     Modal.confirm({
-      title: '确定删除吗?',
+      title: "确定删除吗?",
       icon: <ExclamationCircleOutlined />,
-      content: '',
-      okType: 'danger',
-      onOk () {
-        articleDeleteRun({ ids: ids })
+      content: "",
+      okType: "danger",
+      onOk() {
+        articleDeleteRun({ ids: ids });
       },
-      onCancel () {}
-    })
-  }
+      onCancel() {},
+    });
+  };
 
-  const switchChange = (value: any, record: any) => {
-    articleChangeShowRun({ show: value, id: record.id })
-  }
+  const switchChange = (value: boolean, record: { id: string }) => {
+    articleChangeShowRun({ show: value, id: record.id });
+  };
 
-  const columns: any = [
+  const columns: any[] = [
     {
-      title: '序号',
-      dataIndex: 'staffName',
+      title: "序号",
+      dataIndex: "staffName",
       width: 100,
       render: (value: any, record: any, index: number) => {
-        return (tableParams.page - 1) * tableParams.rows + index + 1
-      }
+        return (tableParams.page - 1) * tableParams.rows + index + 1;
+      },
     },
     {
-      title: '标题',
-      dataIndex: 'title',
-      width: 100
+      title: "标题",
+      dataIndex: "title",
+      width: 100,
     },
     {
-      title: '分类',
-      dataIndex: 'classifyName',
-      width: 100
+      title: "分类",
+      dataIndex: "classifyName",
+      width: 100,
     },
     {
-      title: '标签',
-      dataIndex: 'tagName',
+      title: "标签",
+      dataIndex: "tagName",
       width: 100,
       render: (value: string) => {
-        return value?.split(',')?.map((item: string, index: number) => {
+        return value?.split(",")?.map((item: string, index: number) => {
           return (
             <Tag color={config.COLOR[index]} key={index}>
               {item}
             </Tag>
-          )
-        })
-      }
+          );
+        });
+      },
     },
     {
-      title: '是否展示',
-      dataIndex: 'show',
+      title: "是否展示",
+      dataIndex: "show",
       width: 100,
       render: (value: any, record: any, index: number) => {
         return (
@@ -221,33 +221,33 @@ export default () => {
             unCheckedChildren="关闭"
             onChange={(value) => switchChange(value, record)}
           />
-        )
-      }
+        );
+      },
     },
     {
-      title: '最后更新时间',
-      dataIndex: 'updatedAt',
-      key: 'updatedAt',
+      title: "最后更新时间",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
       width: 120,
       render: (value: any) => {
-        return moment(value).format('YYYY-MM-DD HH:mm:ss')
-      }
+        return moment(value).format("YYYY-MM-DD HH:mm:ss");
+      },
     },
     {
-      title: '操作',
-      dataIndex: 'action',
+      title: "操作",
+      dataIndex: "action",
       width: 100,
-      fixed: 'right',
+      fixed: "right",
       render: (value: any, record: any) => {
         return (
           <Space>
             <a onClick={() => editRecord(record)}>编辑</a>
             <a onClick={() => deleteRecord([record.id])}>删除</a>
           </Space>
-        )
-      }
-    }
-  ]
+        );
+      },
+    },
+  ];
 
   return (
     <div className={styles.content} ref={ref}>
@@ -261,13 +261,13 @@ export default () => {
           <Col span={8}>
             <Form.Item name="classifyId" label="分类">
               <Select placeholder="请选择分类" allowClear={true}>
-                {Array.isArray(classifyEnum)
-                  && classifyEnum.map((item: any) => {
+                {Array.isArray(classifyEnum) &&
+                  classifyEnum.map((item: { id: string; name: string }) => {
                     return (
                       <Select.Option key={item.id} value={item.id}>
                         {item.name}
                       </Select.Option>
-                    )
+                    );
                   })}
               </Select>
             </Form.Item>
@@ -275,13 +275,13 @@ export default () => {
           <Col span={8}>
             <Form.Item name="tagId" label="标签">
               <Select placeholder="请选择标签" allowClear={true}>
-                {Array.isArray(tagList)
-                  && tagList.map((item: any) => {
+                {Array.isArray(tagList) &&
+                  tagList.map((item: { id: string; name: string }) => {
                     return (
                       <Select.Option key={item.id} value={item.id}>
                         {item.name}
                       </Select.Option>
-                    )
+                    );
                   })}
               </Select>
             </Form.Item>
@@ -291,7 +291,7 @@ export default () => {
           <Col
             span={12}
             style={{
-              textAlign: 'left'
+              textAlign: "left",
             }}
           >
             <Button type="primary" onClick={goEdit}>
@@ -299,7 +299,7 @@ export default () => {
             </Button>
             <Button
               style={{
-                margin: '0 8px'
+                margin: "0 8px",
               }}
               danger
               disabled={!selectedRowKeys.length}
@@ -311,7 +311,7 @@ export default () => {
           <Col
             span={12}
             style={{
-              textAlign: 'right'
+              textAlign: "right",
             }}
           >
             <Button type="primary" onClick={onFinish}>
@@ -319,11 +319,11 @@ export default () => {
             </Button>
             <Button
               style={{
-                margin: '0 8px'
+                margin: "0 8px",
               }}
               onClick={() => {
-                setTableParams(config.TABLEPARAMS)
-                form.resetFields()
+                setTableParams(config.TABLEPARAMS);
+                form.resetFields();
               }}
             >
               重置
@@ -351,11 +351,11 @@ export default () => {
             setTableParams({
               ...tableParams,
               page: page,
-              rows: pageSize
-            })
+              rows: pageSize,
+            });
           }}
         />
       </div>
     </div>
-  )
-}
+  );
+};

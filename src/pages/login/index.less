@@ -1,13 +1,17 @@
 .login {
   width: 100vw;
   height: 100vh;
-  background: url("./bg.jpeg") center center;
+  overflow: hidden;
+  background: url("./images/bg.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right;
 }
 
 .modal {
   position: absolute;
   top: 20%;
-  right: 10%;
+  left: 10%;
   display: flex;
   width: 350px;
   background-color: #fff;
@@ -15,6 +19,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  box-shadow: @shadow;
 }
 
 .top {
@@ -33,25 +38,26 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
-  .inputItem {
-    display: block;
-    width: 80%;
-    padding: 10px;
-    margin-bottom: 20px;
-    font-size: @default-text-size;
-    border: 1px solid #dedede;
-    outline: none;
+  .verify {
+    display: flex;
+    .code {
+      width: 60px;
+      font-style: italic;
+      font-size: 16px;
+      color: @primary-color;
+      letter-spacing: 3px;
+      font-weight: bold;
+      cursor: pointer;
+      text-align: center;
+      background-color: #fde220;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
-
-  .btn {
-    width: 80%;
-    padding: 10px;
-    margin-top: 20px;
-    color: #fff;
-    text-align: center;
-    cursor: pointer;
-    background-color: @primary-color;
+  .loginBtn {
+    display: flex;
+    justify-content: space-evenly;
   }
 }
 
