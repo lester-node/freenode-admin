@@ -44,12 +44,8 @@ export default (props: any) => {
     getItem("文章", "/admin/article", <BugOutlined />),
     getItem("分类", "/admin/classify", <DashboardOutlined />),
     getItem("标签", "/admin/tag", <DesktopOutlined />),
-    ...(username == "root"
-      ? [getItem("教程", "/admin/course", <HighlightOutlined />)]
-      : []),
-    ...(username == "root"
-      ? [getItem("教程文章", "/admin/courseArticle", <KeyOutlined />)]
-      : []),
+    getItem("教程", "/admin/course", <HighlightOutlined />),
+    getItem("教程文章", "/admin/courseArticle", <KeyOutlined />),
   ];
 
   const menuSelect = (val: { key: string }) => {
